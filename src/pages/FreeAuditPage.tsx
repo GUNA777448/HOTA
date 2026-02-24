@@ -122,14 +122,17 @@ export default function FreeAuditPage() {
               </h1>
               <p className="text-text-secondary text-lg max-w-2xl lg:mx-0 mx-auto mb-12">
                 Tell us about your brand and we'll deliver a personalised audit
-                report with actionable insights to 10x your digital presence — all
-                for free.
+                report with actionable insights to 10x your digital presence —
+                all for free.
               </p>
 
               {/* How it works */}
               <div className="grid sm:grid-cols-3 gap-6 max-w-3xl lg:mx-0 mx-auto">
                 {steps.map((step, i) => (
-                  <div key={i} className="flex flex-col items-center lg:items-start gap-3">
+                  <div
+                    key={i}
+                    className="flex flex-col items-center lg:items-start gap-3"
+                  >
                     <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center">
                       <step.icon size={24} className="text-accent" />
                     </div>

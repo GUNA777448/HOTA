@@ -35,9 +35,9 @@ export default function HeroSection() {
 
             {/* Subheadline */}
             <p className="text-lg sm:text-xl text-text-secondary max-w-2xl lg:mx-0 mx-auto mb-10 animate-fade-in-up animation-delay-200">
-              Content Creation + Full Digital Growth + Brand Positioning. Built for
-              startups, e-commerce brands, and businesses ready to scale from ₹50K
-              to ₹3L+ monthly.
+              Content Creation + Full Digital Growth + Brand Positioning. Built
+              for startups, e-commerce brands, and businesses ready to scale
+              from ₹50K to ₹3L+ monthly.
             </p>
 
             {/* CTAs */}
