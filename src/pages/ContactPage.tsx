@@ -4,6 +4,7 @@ import {
   Phone,
   MapPin,
   Instagram,
+  Linkedin,
   MessageCircle,
   Send,
   Clock,
@@ -254,7 +255,7 @@ export default function ContactPage() {
                   </a>
 
                   <a
-                    href="tel:+919876543210"
+                    href="tel:+919542421108"
                     className="flex items-center gap-4 p-4 rounded-xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-300 group"
                   >
                     <div className="w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center group-hover:bg-accent/20 transition-colors">
@@ -264,7 +265,7 @@ export default function ContactPage() {
                       <p className="text-xs text-text-muted uppercase tracking-wider">
                         Phone
                       </p>
-                      <p className="font-medium">+91 98765 43210</p>
+                      <p className="font-medium">+91 95424 21108</p>
                     </div>
                   </a>
 
@@ -301,7 +302,7 @@ export default function ContactPage() {
                 </h3>
 
                 <a
-                  href="https://wa.me/919876543210?text=Hi!%20I%27m%20interested%20in%20Hota%27s%20services."
+                  href="https://wa.me/919542421108?text=Hi!%20I%27m%20interested%20in%20Hota%27s%20services."
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-xl bg-[#25D366]/10 border border-[#25D366]/30 hover:bg-[#25D366]/20 transition-all duration-300 text-[#25D366]"
@@ -311,13 +312,23 @@ export default function ContactPage() {
                 </a>
 
                 <a
-                  href="https://instagram.com/hota.agency"
+                  href="https://www.instagram.com/hota.creatives"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-3 p-4 rounded-xl bg-pink-500/10 border border-pink-500/30 hover:bg-pink-500/20 transition-all duration-300 text-pink-400"
                 >
                   <Instagram size={20} />
                   <span className="font-bold text-sm">Follow on Instagram</span>
+                </a>
+
+                <a
+                  href="https://www.linkedin.com/company/hota-creatives/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 hover:bg-blue-500/20 transition-all duration-300 text-blue-400"
+                >
+                  <Linkedin size={20} />
+                  <span className="font-bold text-sm">Connect on LinkedIn</span>
                 </a>
               </div>
             </div>

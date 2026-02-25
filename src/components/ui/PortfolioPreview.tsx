@@ -10,30 +10,6 @@ const portfolioItems = [
     image:
       "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop",
   },
-  {
-    title: "Restaurant Chain Rebrand",
-    category: "Branding + Marketing",
-    description:
-      "Full rebrand and digital marketing for a 15-outlet restaurant chain. 3x increase in online orders.",
-    image:
-      "https://images.unsplash.com/photo-1552566626-52f8b828add9?w=600&h=400&fit=crop",
-  },
-  {
-    title: "EdTech Performance Campaign",
-    category: "Performance Marketing",
-    description:
-      "Meta & Google Ads campaign for an EdTech startup. ₹12 cost per lead, 500+ leads in first month.",
-    image:
-      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600&h=400&fit=crop",
-  },
-  {
-    title: "Real Estate Brand Film",
-    category: "Video Production",
-    description:
-      "Cinematic brand film and social content for a premium real estate developer in Mumbai.",
-    image:
-      "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=400&fit=crop",
-  },
 ];
 
 export default function PortfolioPreview() {
@@ -62,11 +38,11 @@ export default function PortfolioPreview() {
           </Link>
         </div>
 
-        <div className="grid sm:grid-cols-2 gap-6">
+        <div className="flex justify-center">
           {portfolioItems.map((item) => (
             <div
               key={item.title}
-              className="group relative overflow-hidden rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500"
+              className="group relative overflow-hidden rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 max-w-2xl w-full"
             >
               {/* Image */}
               <div className="aspect-[3/2] overflow-hidden">

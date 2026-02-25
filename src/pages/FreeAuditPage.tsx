@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ChangeEvent } from "react";
 import {
   BarChart3,
   Globe,
@@ -6,6 +6,10 @@ import {
   Sparkles,
   ArrowRight,
   CheckCircle,
+  Upload,
+  FileText,
+  Image as ImageIcon,
+  X,
 } from "lucide-react";
 import Lottie from "lottie-react";
 import digitalMarketingAnimation from "@/assets/animations/performance.json";
@@ -61,12 +65,37 @@ export default function FreeAuditPage() {
     phone: "",
     biggestChallenge: "",
   });
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files) {
+      const validFiles = Array.from(files).filter((file) => {
+        const isValidType =
+          file.type.includes("image") || file.type === "application/pdf";
+        const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
+        return isValidType && isValidSize;
+      });
+      setUploadedFiles((prev) => [...prev, ...validFiles]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return bytes + " B";
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // In production, POST to an email/CRM API
+    // In production, POST to an email/CRM API with files
     console.log("Free Audit form submitted:", formData);
+    console.log("Uploaded files:", uploadedFiles);
     setIsSubmitted(true);
   };
 
@@ -387,6 +416,87 @@ export default function FreeAuditPage() {
                     placeholder="e.g., Low engagement on Instagram, not generating leads from social media, need a rebrand..."
                   />
                 </div>
+              </div>
+            </div>
+
+            {/* File Upload Section */}
+            <div>
+              <h2 className="text-xl font-black mb-6 flex items-center gap-2">
+                <span className="w-8 h-8 bg-accent text-black text-sm font-black rounded-lg flex items-center justify-center">
+                  5
+                </span>
+                Supporting Documents (Optional)
+              </h2>
+              <div className="space-y-4">
+                <p className="text-sm text-text-secondary mb-4">
+                  Upload any relevant screenshots, analytics reports, or brand
+                  materials (Images or PDFs, max 10MB per file)
+                </p>
+
+                {/* Upload Area */}
+                <label className="block">
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*,.pdf"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                  <div className="border-2 border-dashed border-border hover:border-accent rounded-xl p-8 text-center cursor-pointer transition-all duration-300 hover:bg-bg-card group">
+                    <Upload
+                      size={40}
+                      className="mx-auto mb-4 text-text-muted group-hover:text-accent transition-colors"
+                    />
+                    <p className="text-text-primary font-medium mb-1">
+                      Click to upload or drag and drop
+                    </p>
+                    <p className="text-xs text-text-muted">
+                      PNG, JPG, PDF up to 10MB each
+                    </p>
+                  </div>
+                </label>
+
+                {/* Uploaded Files List */}
+                {uploadedFiles.length > 0 && (
+                  <div className="space-y-2 mt-4">
+                    <p className="text-sm font-medium text-text-secondary">
+                      Uploaded Files ({uploadedFiles.length})
+                    </p>
+                    {uploadedFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-3 rounded-xl bg-bg-card border border-border"
+                      >
+                        <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          {file.type === "application/pdf" ? (
+                            <FileText size={20} className="text-accent" />
+                          ) : (
+                            <ImageIcon size={20} className="text-accent" />
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium text-text-primary truncate">
+                            {file.name}
+                          </p>
+                          <p className="text-xs text-text-muted">
+                            {formatFileSize(file.size)}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => removeFile(index)}
+                          className="p-1 hover:bg-red-500/10 rounded-lg transition-colors group"
+                          aria-label="Remove file"
+                        >
+                          <X
+                            size={18}
+                            className="text-text-muted group-hover:text-red-400"
+                          />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

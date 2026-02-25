@@ -1,7 +1,7 @@
 import { MessageCircle } from "lucide-react";
 
 export default function WhatsAppFAB() {
-  const phoneNumber = "919876543210"; // Indian format without +
+  const phoneNumber = "919542421108"; // Indian format without +
   const message = encodeURIComponent(
     "Hi! I'm interested in Hota's services. Can we discuss?",
   );

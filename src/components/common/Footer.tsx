@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Instagram, Mail, Phone, MapPin } from "lucide-react";
+import { Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -28,6 +28,7 @@ export default function Footer() {
               {[
                 { name: "Home", path: "/" },
                 // { name: "Packages", path: "/packages" },
+                { name: "Portfolio", path: "/portfolio" },
                 { name: "Contact", path: "/contact" },
                 { name: "Free Audit", path: "/free-audit" },
               ].map((link) => (
@@ -70,24 +71,33 @@ export default function Footer() {
                 hello@hota.agency
               </a>
               <a
-                href="tel:+919876543210"
+                href="tel:+919542421108"
                 className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent transition-colors duration-300"
               >
                 <Phone size={16} />
-                +91 98765 43210
+                +91 95424 21108
               </a>
               <div className="flex items-center gap-2 text-sm text-text-secondary">
                 <MapPin size={16} />
                 Mumbai, India
               </div>
               <a
-                href="https://instagram.com/hota.agency"
+                href="https://www.instagram.com/hota.creatives"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent transition-colors duration-300"
               >
                 <Instagram size={16} />
-                @hota.agency
+                @hota.creatives
+              </a>
+              <a
+                href="https://www.linkedin.com/company/hota-creatives/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent transition-colors duration-300"
+              >
+                <Linkedin size={16} />
+                HOTA Creatives
               </a>
             </div>
           </div>

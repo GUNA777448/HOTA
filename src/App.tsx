@@ -4,6 +4,7 @@ import {
   HomePage,
   ServicesPage,
   PackagesPage,
+  PortfolioPage,
   ContactPage,
   FreeAuditPage,
 } from "@/pages";
@@ -17,6 +18,7 @@ function App() {
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
           <Route path={ROUTES.PACKAGES} element={<PackagesPage />} />
+          <Route path={ROUTES.PORTFOLIO} element={<PortfolioPage />} />
           <Route path={ROUTES.CONTACT} element={<ContactPage />} />
           <Route path={ROUTES.FREE_AUDIT} element={<FreeAuditPage />} />
         </Route>
