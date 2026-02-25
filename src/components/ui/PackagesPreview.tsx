@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
-import Package3DIcon from "./Package3DIcon";
 
 const packages = [
   {
@@ -87,9 +86,6 @@ export default function PackagesPreview() {
                   : "bg-bg-card border-border hover:border-accent/30"
               }`}
             >
-              {/* 3D Icon */}
-              <Package3DIcon popular={pkg.popular} />
-
               {pkg.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-accent text-black text-xs font-bold uppercase tracking-wider px-4 py-1 rounded-full">
                   Most Popular

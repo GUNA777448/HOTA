@@ -8,7 +8,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import Lottie from "lottie-react";
-import digitalMarketingAnimation from "@/assets/Digital Marketing.json";
+import digitalMarketingAnimation from "@/assets/animations/performance.json";
 
 const industries = [
   "Fashion & Apparel",

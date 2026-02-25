@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import Portfolio3DHover from "./Portfolio3DHover";
 
 const portfolioItems = [
   {
@@ -69,9 +68,6 @@ export default function PortfolioPreview() {
               key={item.title}
               className="group relative overflow-hidden rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500"
             >
-              {/* 3D Hover Effect */}
-              <Portfolio3DHover />
-
               {/* Image */}
               <div className="aspect-[3/2] overflow-hidden">
                 <img

@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
-import logo from "@/assets/Hota Creatives logo final (1).png";
+import logo from "@/assets/HOTA-BANNER.png";
 
 const navLinks = [
   { name: "Home", path: "/" },
+  { name: "Services", path: "/services" },
   // { name: "Packages", path: "/packages" },
-  { name: "Portfolio", path: "/portfolio" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -23,7 +23,7 @@ export default function Navbar() {
             <img
               src={logo}
               alt="HOTA Creative Growth Agency"
-              className="h-36 w-36 w-auto object-contain"
+              className="h-14 w-auto object-contain"
             />
           </Link>
 

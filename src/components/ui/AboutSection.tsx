@@ -1,15 +1,9 @@
 import { Target, Zap, TrendingUp } from "lucide-react";
-import GrowthVisualization3D from "./GrowthVisualization3D";
 
 export default function AboutSection() {
   return (
     <section className="py-24 bg-bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 3D Growth Visualization */}
-        <div className="mb-16">
-          <GrowthVisualization3D />
-        </div>
-
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left: Content */}
           <div>

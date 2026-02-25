@@ -6,10 +6,13 @@ import {
   Video,
   Globe,
 } from "lucide-react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Float } from "@react-three/drei";
-import { useRef } from "react";
-import * as THREE from "three";
+import Lottie from "lottie-react";
+import socialMediaAnimation from "@/assets/animations/social-media.json";
+import videoProductionAnimation from "@/assets/animations/Video production.json";
+import contentCreationAnimation from "@/assets/animations/Content Manager.json";
+import performanceAnimation from "@/assets/animations/performance.json";
+import brandIdentityAnimation from "@/assets/animations/identity.json";
+import webDesignAnimation from "@/assets/animations/Web Design Illustration.json";
 
 const services = [
   {
@@ -50,32 +53,6 @@ const services = [
   },
 ];
 
-function Service3DIcon() {
-  const meshRef = useRef<THREE.Mesh>(null);
-
-  useFrame((state) => {
-    if (meshRef.current) {
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.5;
-      meshRef.current.rotation.x =
-        Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-    }
-  });
-
-  return (
-    <Float speed={2} rotationIntensity={0.5} floatIntensity={0.5}>
-      <mesh ref={meshRef}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial
-          color="#FFEB3B"
-          wireframe
-          transparent
-          opacity={0.6}
-        />
-      </mesh>
-    </Float>
-  );
-}
-
 export default function ServicesSection() {
   return (
     <section className="py-24">
@@ -94,28 +71,64 @@ export default function ServicesSection() {
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-1 lg:grid-cols-2 gap-6">
           {services.map((service) => (
             <div
               key={service.title}
-              className="group p-8 rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden"
+              className="group p-6 rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden"
             >
-              {/* 3D Background Effect */}
-              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none">
-                <Canvas camera={{ position: [0, 0, 3], fov: 50 }}>
-                  <ambientLight intensity={0.5} />
-                  <pointLight position={[5, 5, 5]} intensity={1} />
-                  <Service3DIcon />
-                </Canvas>
-              </div>
+              <div className="flex items-center gap-6">
+                {/* Animation/Icon Half */}
+                <div className="shrink-0 w-32 h-32 bg-accent/10 rounded-2xl flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
+                  {service.title === "Social Media Management" ? (
+                    <Lottie
+                      animationData={socialMediaAnimation}
+                      loop={true}
+                      className="w-24 h-24"
+                    />
+                  ) : service.title === "Content Creation" ? (
+                    <Lottie
+                      animationData={contentCreationAnimation}
+                      loop={true}
+                      className="w-24 h-24"
+                    />
+                  ) : service.title === "Performance Marketing" ? (
+                    <Lottie
+                      animationData={performanceAnimation}
+                      loop={true}
+                      className="w-24 h-24"
+                    />
+                  ) : service.title === "Brand Identity & Design" ? (
+                    <Lottie
+                      animationData={brandIdentityAnimation}
+                      loop={true}
+                      className="w-24 h-24"
+                    />
+                  ) : service.title === "Video Production" ? (
+                    <Lottie
+                      animationData={videoProductionAnimation}
+                      loop={true}
+                      className="w-24 h-24"
+                    />
+                  ) : service.title === "Website & Funnel Design" ? (
+                    <Lottie
+                      animationData={webDesignAnimation}
+                      loop={true}
+                      className="w-24 h-24"
+                    />
+                  ) : (
+                    <service.icon size={48} className="text-accent" />
+                  )}
+                </div>
 
-              <div className="relative z-10 w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors duration-300">
-                <service.icon size={28} className="text-accent" />
+                {/* Content Half */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+                  <p className="text-text-secondary text-sm leading-relaxed">
+                    {service.description}
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-              <p className="text-text-secondary text-sm leading-relaxed">
-                {service.description}
-              </p>
             </div>
           ))}
         </div>

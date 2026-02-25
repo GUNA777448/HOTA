@@ -28,7 +28,6 @@ export default function Footer() {
               {[
                 { name: "Home", path: "/" },
                 // { name: "Packages", path: "/packages" },
-                { name: "Portfolio", path: "/portfolio" },
                 { name: "Contact", path: "/contact" },
                 { name: "Free Audit", path: "/free-audit" },
               ].map((link) => (

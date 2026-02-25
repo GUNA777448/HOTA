@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Sparkles } from "lucide-react";
-import Hero3DBackground from "./Hero3DBackground";
 import cuateImage from "../../assets/cuate.png";
 
 export default function HeroSection() {
@@ -10,9 +9,6 @@ export default function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-primary" />
       <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
-
-      {/* 3D Background */}
-      <Hero3DBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
