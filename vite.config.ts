@@ -46,6 +46,8 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,json,woff2}"],
+        // Increase the cache size limit to 5 MB for large assets
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
@@ -82,6 +84,20 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Split vendor libraries into separate chunks
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          "three-vendor": ["three", "@react-three/fiber", "@react-three/drei"],
+          lottie: ["lottie-react"],
+          "ui-vendor": ["lucide-react"],
+        },
+      },
     },
   },
 });
