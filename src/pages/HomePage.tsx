@@ -4,12 +4,12 @@ import ServicesSection from "@/components/ui/ServicesSection";
 import PortfolioPreview from "@/components/ui/PortfolioPreview";
 // import PackagesPreview from "@/components/ui/PackagesPreview";
 import CTASection from "@/components/ui/CTASection";
-import { SEO } from "@/components";
+// import { SEO } from "@/components";
 
 export default function HomePage() {
   return (
     <>
-      <SEO />
+      {/* SEO removed */}
       <HeroSection />
       <AboutSection />
       <ServicesSection />

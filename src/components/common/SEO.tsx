@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 
 interface SEOProps {
   title?: string;
@@ -20,7 +20,7 @@ const defaultSEO = {
   siteUrl: "https://hotacreatives.in",
 };
 
-export function SEO({
+export function useSEO({
   title,
   description,
   keywords,
@@ -28,43 +28,67 @@ export function SEO({
   ogType = "website",
   canonicalUrl,
 }: SEOProps) {
-  const pageTitle = title
-    ? `${title} | HOTA - Creative Growth Agency`
-    : defaultSEO.title;
-  const pageDescription = description || defaultSEO.description;
-  const pageKeywords = keywords || defaultSEO.keywords;
-  const pageOgImage = ogImage || defaultSEO.ogImage;
-  const pageUrl = canonicalUrl || defaultSEO.siteUrl;
+  useEffect(() => {
+    const pageTitle = title
+      ? `${title} | HOTA - Creative Growth Agency`
+      : defaultSEO.title;
+    document.title = pageTitle;
 
-  return (
-    <Helmet>
-      {/* Primary Meta Tags */}
-      <title>{pageTitle}</title>
-      <meta name="title" content={pageTitle} />
-      <meta name="description" content={pageDescription} />
-      <meta name="keywords" content={pageKeywords} />
-      <link rel="canonical" href={pageUrl} />
+    const metaTags = [
+      { name: "title", content: pageTitle },
+      { name: "description", content: description || defaultSEO.description },
+      { name: "keywords", content: keywords || defaultSEO.keywords },
+      { property: "og:type", content: ogType },
+      { property: "og:url", content: canonicalUrl || defaultSEO.siteUrl },
+      { property: "og:title", content: pageTitle },
+      {
+        property: "og:description",
+        content: description || defaultSEO.description,
+      },
+      { property: "og:image", content: ogImage || defaultSEO.ogImage },
+      { property: "og:site_name", content: "HOTA" },
+      { property: "twitter:card", content: "summary_large_image" },
+      { property: "twitter:url", content: canonicalUrl || defaultSEO.siteUrl },
+      { property: "twitter:title", content: pageTitle },
+      {
+        property: "twitter:description",
+        content: description || defaultSEO.description,
+      },
+      { property: "twitter:image", content: ogImage || defaultSEO.ogImage },
+      { name: "robots", content: "index, follow" },
+      { name: "language", content: "English" },
+      { name: "revisit-after", content: "7 days" },
+      { name: "author", content: "hotacreatives@gmail.com" },
+    ];
 
-      {/* Open Graph / Facebook */}
-      <meta property="og:type" content={ogType} />
-      <meta property="og:url" content={pageUrl} />
-      <meta property="og:title" content={pageTitle} />
-      <meta property="og:description" content={pageDescription} />
-      <meta property="og:image" content={pageOgImage} />
-      <meta property="og:site_name" content="HOTA" />
+    metaTags.forEach((tag) => {
+      let el;
+      if (tag.name) {
+        el = document.querySelector(`meta[name='${tag.name}']`);
+        if (!el) {
+          el = document.createElement("meta");
+          el.setAttribute("name", tag.name);
+          document.head.appendChild(el);
+        }
+        el.setAttribute("content", tag.content);
+      } else if (tag.property) {
+        el = document.querySelector(`meta[property='${tag.property}']`);
+        if (!el) {
+          el = document.createElement("meta");
+          el.setAttribute("property", tag.property);
+          document.head.appendChild(el);
+        }
+        el.setAttribute("content", tag.content);
+      }
+    });
 
-      {/* Twitter */}
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={pageUrl} />
-      <meta property="twitter:title" content={pageTitle} />
-      <meta property="twitter:description" content={pageDescription} />
-      <meta property="twitter:image" content={pageOgImage} />
-
-      {/* Additional SEO */}
-      <meta name="robots" content="index, follow" />
-      <meta name="language" content="English" />
-      <meta name="revisit-after" content="7 days" />
-      <meta name="author" content="hotacreatives@gmail.com" />
-    </Helmet>
-  );
+    // Canonical
+    let link = document.querySelector("link[rel='canonical']");
+    if (!link) {
+      link = document.createElement("link");
+      link.setAttribute("rel", "canonical");
+      document.head.appendChild(link);
+    }
+    link.setAttribute("href", canonicalUrl || defaultSEO.siteUrl);
+  }, [title, description, keywords, ogImage, ogType, canonicalUrl]);
 }

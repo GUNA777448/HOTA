@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { ROUTES } from "@/routes";
-import { SEO } from "@/components";
+// import { SEO } from "@/components";
 
 const services: {
   icon: LucideIcon;
@@ -152,12 +152,8 @@ const services: {
 export default function ServicesPage() {
   return (
     <>
-      <SEO
-        title="Services"
-        description="Complete digital marketing services: Social Media Management, Content Creation, Performance Marketing (Meta & Google Ads), Video Production, Brand Identity, and Web Design. Turn your brand into a growth machine."
-        keywords="social media management India, content creation agency, performance marketing, Meta ads management, Google ads agency, video production Mumbai, brand identity design, web design agency India"
-        canonicalUrl="https://hotacreatives.in/services"
-      />
+      {/* SEO removed */}
+      {/* SEO removed */}
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

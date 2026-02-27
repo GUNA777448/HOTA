@@ -1,5 +1,5 @@
 import { ExternalLink } from "lucide-react";
-import { SEO } from "@/components";
+// import { SEO } from "@/components";
 
 const portfolioItems = [
   {
@@ -16,12 +16,7 @@ const portfolioItems = [
 export default function PortfolioPage() {
   return (
     <>
-      <SEO
-        title="Portfolio"
-        description="See real results from our brand growth projects. From D2C fashion launches to F&B social media campaigns - explore portfolios that speak results."
-        keywords="digital marketing portfolio India, social media case studies, brand growth portfolio, Instagram portfolio, content creation examples"
-        canonicalUrl="https://hotacreatives.in/portfolio"
-      />
+      {/* SEO removed */}
       {/* Hero */}
       <section className="py-24 bg-bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

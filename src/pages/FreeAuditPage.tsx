@@ -14,7 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { toast } from "sonner";
-import { SEO } from "@/components";
+import { useSEO } from "../components/common/SEO";
 
 const AUDIT_APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwnlKBfblE-gXXulkmIrmmdYT2eqjAJMdWjamtlxP7QLMtZ-NJcRPyxDgHF40h4SfmW/exec";
@@ -223,14 +223,16 @@ export default function FreeAuditPage() {
     );
   }
 
+  useSEO({
+    title: "Free Brand Growth Audit",
+    description:
+      "Get a comprehensive free digital audit report for your brand. We analyze your content, brand positioning, and growth opportunities. No obligations, just actionable insights.",
+    keywords:
+      "free brand audit, free digital marketing audit India, social media audit, brand positioning analysis, free marketing consultation India",
+    canonicalUrl: "https://hotacreatives.in/free-audit",
+  });
   return (
     <>
-      <SEO
-        title="Free Brand Growth Audit"
-        description="Get a comprehensive free digital audit report for your brand. We analyze your content, brand positioning, and growth opportunities. No obligations, just actionable insights."
-        keywords="free brand audit, free digital marketing audit India, social media audit, brand positioning analysis, free marketing consultation India"
-        canonicalUrl="https://hotacreatives.in/free-audit"
-      />
       {/* Hero */}
       <section className="py-24 bg-bg-secondary relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(249,115,22,0.1),transparent_60%)]" />

@@ -12,7 +12,7 @@ import {
   Headset,
 } from "lucide-react";
 import { toast } from "sonner";
-import { SEO } from "../components";
+import { useSEO } from "../components/common/SEO";
 import { contact, socialLinks } from "../constants";
 
 const APPS_SCRIPT_URL =
@@ -115,14 +115,16 @@ export default function ContactPage() {
     }
   };
 
+  useSEO({
+    title: "Contact Us",
+    description:
+      "Ready to grow your brand? Get in touch with HOTA Creative Growth Agency. WhatsApp, email, or fill out our contact form. We respond within 24 hours.",
+    keywords:
+      "contact creative agency India, digital marketing consultation, brand growth agency contact, Mumbai agency contact",
+    canonicalUrl: "https://hotacreatives.in/contact",
+  });
   return (
     <>
-      <SEO
-        title="Contact Us"
-        description="Ready to grow your brand? Get in touch with HOTA Creative Growth Agency. WhatsApp, email, or fill out our contact form. We respond within 24 hours."
-        keywords="contact creative agency India, digital marketing consultation, brand growth agency contact, Mumbai agency contact"
-        canonicalUrl="https://hotacreatives.in/contact"
-      />
       {/* Hero */}
       <section className="py-24 bg-bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
