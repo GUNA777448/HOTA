@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Check, ArrowRight, HelpCircle } from "lucide-react";
+import { SEO } from "@/components";
 
 const packages = [
   {
@@ -104,6 +105,12 @@ const faqs = [
 export default function PackagesPage() {
   return (
     <>
+      <SEO
+        title="Packages & Pricing"
+        description="Choose from Ignite (₹50,000/month), Elevate (₹1,20,000/month), or Dominate (₹2,50,000/month) packages. Transparent pricing for social media management, content creation, and digital growth."
+        keywords="digital marketing packages India, social media packages, content creation pricing, performance marketing packages, Instagram management pricing, digital agency packages Mumbai"
+        canonicalUrl="https://hotacreatives.in/packages"
+      />
       {/* Hero */}
       <section className="py-24 bg-bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">

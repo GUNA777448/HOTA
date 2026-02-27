@@ -1,4 +1,4 @@
-import { useState, type FormEvent, type ChangeEvent } from "react";
+import { useState, type FormEvent, type ChangeEvent, useCallback } from "react";
 import {
   BarChart3,
   Globe,
@@ -10,9 +10,14 @@ import {
   FileText,
   Image as ImageIcon,
   X,
+  Loader2,
+  TrendingUp,
 } from "lucide-react";
-import Lottie from "lottie-react";
-import digitalMarketingAnimation from "@/assets/animations/performance.json";
+import { toast } from "sonner";
+import { SEO } from "@/components";
+
+const AUDIT_APPS_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbwnlKBfblE-gXXulkmIrmmdYT2eqjAJMdWjamtlxP7QLMtZ-NJcRPyxDgHF40h4SfmW/exec";
 
 const industries = [
   "Fashion & Apparel",
@@ -51,6 +56,36 @@ const steps = [
   },
 ];
 
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB per file
+const MAX_FILES = 5;
+const ALLOWED_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+  "application/pdf",
+];
+
+/** Convert a File to a base64 string (data only, no prefix) */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = reader.result as string;
+      // strip "data:<mime>;base64," prefix
+      resolve(result.split(",")[1]);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function formatFileSize(bytes: number): string {
+  if (bytes < 1024) return bytes + " B";
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
+  return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+}
+
 export default function FreeAuditPage() {
   const [formData, setFormData] = useState({
     name: "",
@@ -66,37 +101,92 @@ export default function FreeAuditPage() {
     biggestChallenge: "",
   });
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [isDragOver, setIsDragOver] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const validFiles = Array.from(files).filter((file) => {
-        const isValidType =
-          file.type.includes("image") || file.type === "application/pdf";
-        const isValidSize = file.size <= 10 * 1024 * 1024; // 10MB limit
-        return isValidType && isValidSize;
-      });
-      setUploadedFiles((prev) => [...prev, ...validFiles]);
-    }
+  // ── File handling ──────────────────────────────────────
+  const addFiles = useCallback(
+    (incoming: FileList | File[]) => {
+      const files = Array.from(incoming);
+      const valid: File[] = [];
+      const errors: string[] = [];
+
+      for (const f of files) {
+        if (!ALLOWED_TYPES.includes(f.type)) {
+          errors.push(`"${f.name}" — unsupported format.`);
+        } else if (f.size > MAX_FILE_SIZE) {
+          errors.push(`"${f.name}" exceeds 10 MB.`);
+        } else if (uploadedFiles.length + valid.length >= MAX_FILES) {
+          errors.push(`Max ${MAX_FILES} files allowed.`);
+          break;
+        } else {
+          valid.push(f);
+        }
+      }
+
+      if (errors.length) setErrorMsg(errors.join(" "));
+      if (valid.length) setUploadedFiles((prev) => [...prev, ...valid]);
+    },
+    [uploadedFiles.length],
+  );
+
+  const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) addFiles(e.target.files);
+    e.target.value = ""; // reset so same file can be re-selected
   };
 
   const removeFile = (index: number) => {
     setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    if (e.dataTransfer.files) addFiles(e.dataTransfer.files);
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  // ── Submit ─────────────────────────────────────────────
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // In production, POST to an email/CRM API with files
-    console.log("Free Audit form submitted:", formData);
-    console.log("Uploaded files:", uploadedFiles);
-    setIsSubmitted(true);
+    setIsLoading(true);
+    setErrorMsg("");
+
+    try {
+      // Convert uploaded files to base64 for the Apps Script
+      const filesPayload = await Promise.all(
+        uploadedFiles.map(async (f) => ({
+          name: f.name,
+          mimeType: f.type,
+          base64: await fileToBase64(f),
+        })),
+      );
+
+      const res = await fetch(AUDIT_APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ ...formData, files: filesPayload }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setIsSubmitted(true);
+        toast.success("Audit request submitted!", {
+          description: "You'll receive your free report within 48 hours.",
+        });
+      } else {
+        const msg = json.message || "Something went wrong. Please try again.";
+        setErrorMsg(msg);
+        toast.error("Submission failed", { description: msg });
+      }
+    } catch {
+      const msg =
+        "Network error \u2014 please check your connection and try again.";
+      setErrorMsg(msg);
+      toast.error("Network error", { description: msg });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSubmitted) {
@@ -135,6 +225,12 @@ export default function FreeAuditPage() {
 
   return (
     <>
+      <SEO
+        title="Free Brand Growth Audit"
+        description="Get a comprehensive free digital audit report for your brand. We analyze your content, brand positioning, and growth opportunities. No obligations, just actionable insights."
+        keywords="free brand audit, free digital marketing audit India, social media audit, brand positioning analysis, free marketing consultation India"
+        canonicalUrl="https://hotacreatives.in/free-audit"
+      />
       {/* Hero */}
       <section className="py-24 bg-bg-secondary relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(249,115,22,0.1),transparent_60%)]" />
@@ -173,13 +269,17 @@ export default function FreeAuditPage() {
               </div>
             </div>
 
-            {/* Right: Lottie Animation */}
+            {/* Right: Decorative Icon */}
             <div className="hidden lg:flex items-center justify-center">
-              <Lottie
-                animationData={digitalMarketingAnimation}
-                loop={true}
-                className="w-full max-w-lg"
-              />
+              <div className="w-64 h-64 bg-accent/10 rounded-3xl flex items-center justify-center relative">
+                <TrendingUp size={100} className="text-accent" />
+                <div className="absolute -top-4 -right-4 w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center">
+                  <Sparkles size={24} className="text-accent" />
+                </div>
+                <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-accent/20 rounded-xl flex items-center justify-center">
+                  <BarChart3 size={24} className="text-accent" />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -429,69 +529,82 @@ export default function FreeAuditPage() {
               </h2>
               <div className="space-y-4">
                 <p className="text-sm text-text-secondary mb-4">
-                  Upload any relevant screenshots, analytics reports, or brand
-                  materials (Images or PDFs, max 10MB per file)
+                  Upload brand materials, screenshots, analytics reports, or
+                  images you'd like us to review. We'll store them securely in
+                  Google Drive.
                 </p>
 
-                {/* Upload Area */}
-                <label className="block">
+                {/* Drag & Drop Zone */}
+                <label
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setIsDragOver(true);
+                  }}
+                  onDragLeave={() => setIsDragOver(false)}
+                  onDrop={handleDrop}
+                  className={`relative flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed p-8 cursor-pointer transition-all duration-300 ${
+                    isDragOver
+                      ? "border-accent bg-accent/5"
+                      : "border-border bg-bg-card hover:border-accent/50"
+                  }`}
+                >
+                  <Upload
+                    size={32}
+                    className={`transition-colors duration-300 ${
+                      isDragOver ? "text-accent" : "text-text-muted"
+                    }`}
+                  />
+                  <div className="text-center">
+                    <p className="text-sm font-semibold text-text-primary">
+                      Drag & drop files here or{" "}
+                      <span className="text-accent underline">browse</span>
+                    </p>
+                    <p className="text-xs text-text-muted mt-1">
+                      JPG, PNG, WEBP, GIF, PDF — max 10 MB each, up to{" "}
+                      {MAX_FILES} files
+                    </p>
+                  </div>
                   <input
                     type="file"
                     multiple
-                    accept="image/*,.pdf"
-                    onChange={handleFileUpload}
-                    className="hidden"
+                    accept={ALLOWED_TYPES.join(",")}
+                    onChange={handleFileInput}
+                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
                   />
-                  <div className="border-2 border-dashed border-border hover:border-accent rounded-xl p-8 text-center cursor-pointer transition-all duration-300 hover:bg-bg-card group">
-                    <Upload
-                      size={40}
-                      className="mx-auto mb-4 text-text-muted group-hover:text-accent transition-colors"
-                    />
-                    <p className="text-text-primary font-medium mb-1">
-                      Click to upload or drag and drop
-                    </p>
-                    <p className="text-xs text-text-muted">
-                      PNG, JPG, PDF up to 10MB each
-                    </p>
-                  </div>
                 </label>
 
-                {/* Uploaded Files List */}
+                {/* File list */}
                 {uploadedFiles.length > 0 && (
-                  <div className="space-y-2 mt-4">
-                    <p className="text-sm font-medium text-text-secondary">
-                      Uploaded Files ({uploadedFiles.length})
-                    </p>
-                    {uploadedFiles.map((file, index) => (
+                  <div className="space-y-2">
+                    {uploadedFiles.map((file, idx) => (
                       <div
-                        key={index}
-                        className="flex items-center gap-3 p-3 rounded-xl bg-bg-card border border-border"
+                        key={`${file.name}-${idx}`}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl bg-bg-card border border-border"
                       >
-                        <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                          {file.type === "application/pdf" ? (
-                            <FileText size={20} className="text-accent" />
-                          ) : (
-                            <ImageIcon size={20} className="text-accent" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-text-primary truncate">
-                            {file.name}
-                          </p>
-                          <p className="text-xs text-text-muted">
-                            {formatFileSize(file.size)}
-                          </p>
-                        </div>
+                        {file.type.startsWith("image/") ? (
+                          <ImageIcon
+                            size={18}
+                            className="text-accent shrink-0"
+                          />
+                        ) : (
+                          <FileText
+                            size={18}
+                            className="text-accent shrink-0"
+                          />
+                        )}
+                        <span className="text-sm text-text-primary truncate flex-1">
+                          {file.name}
+                        </span>
+                        <span className="text-xs text-text-muted shrink-0">
+                          {formatFileSize(file.size)}
+                        </span>
                         <button
                           type="button"
-                          onClick={() => removeFile(index)}
-                          className="p-1 hover:bg-red-500/10 rounded-lg transition-colors group"
-                          aria-label="Remove file"
+                          onClick={() => removeFile(idx)}
+                          className="p-1 rounded-lg hover:bg-red-500/10 transition-colors"
+                          aria-label={`Remove ${file.name}`}
                         >
-                          <X
-                            size={18}
-                            className="text-text-muted group-hover:text-red-400"
-                          />
+                          <X size={16} className="text-red-400" />
                         </button>
                       </div>
                     ))}
@@ -500,17 +613,34 @@ export default function FreeAuditPage() {
               </div>
             </div>
 
+            {/* Error */}
+            {errorMsg && (
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                {errorMsg}
+              </div>
+            )}
+
             {/* Submit */}
             <div className="pt-4">
               <button
                 type="submit"
-                className="group bg-accent hover:bg-accent-hover text-black font-black px-10 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105 flex items-center gap-2"
+                disabled={isLoading}
+                className="group bg-accent hover:bg-accent-hover text-black font-black px-10 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 disabled:opacity-60 disabled:hover:scale-100"
               >
-                Get Your Free Brand Growth Audit
-                <ArrowRight
-                  size={20}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
+                {isLoading ? (
+                  <>
+                    <Loader2 size={20} className="animate-spin" />
+                    Submitting…
+                  </>
+                ) : (
+                  <>
+                    Get Your Free Brand Growth Audit
+                    <ArrowRight
+                      size={20}
+                      className="group-hover:translate-x-1 transition-transform"
+                    />
+                  </>
+                )}
               </button>
               <p className="text-xs text-text-muted mt-4">
                 Your information is 100% secure. We'll never share your data

@@ -58,6 +58,8 @@ export default function CustomCursor() {
       }, 800);
     };
 
+    let rafId: number;
+
     const animateCursor = () => {
       // Smooth cursor movement with easing
       const ease = 0.15;
@@ -75,16 +77,17 @@ export default function CustomCursor() {
         dot.style.transform = `translate(${dotX - 3}px, ${dotY - 3}px)`;
       }
 
-      requestAnimationFrame(animateCursor);
+      rafId = requestAnimationFrame(animateCursor);
     };
 
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseover", handleMouseOver);
-    animateCursor();
+    rafId = requestAnimationFrame(animateCursor);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseover", handleMouseOver);
+      cancelAnimationFrame(rafId);
       if (sparkleTimeoutRef.current) {
         clearTimeout(sparkleTimeoutRef.current);
       }

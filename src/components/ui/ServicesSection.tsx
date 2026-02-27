@@ -5,16 +5,19 @@ import {
   Palette,
   Video,
   Globe,
+  type LucideIcon,
 } from "lucide-react";
-import Lottie from "lottie-react";
-import socialMediaAnimation from "@/assets/animations/social-media.json";
-import videoProductionAnimation from "@/assets/animations/Video production.json";
-import contentCreationAnimation from "@/assets/animations/Content Manager.json";
-import performanceAnimation from "@/assets/animations/performance.json";
-import brandIdentityAnimation from "@/assets/animations/identity.json";
-import webDesignAnimation from "@/assets/animations/Web Design Illustration.json";
 
-const services = [
+/* ------------------------------------------------------------------ */
+/* Service data                                                       */
+/* ------------------------------------------------------------------ */
+interface Service {
+  icon: LucideIcon;
+  title: string;
+  description: string;
+}
+
+const services: Service[] = [
   {
     icon: Megaphone,
     title: "Social Media Management",
@@ -53,6 +56,33 @@ const services = [
   },
 ];
 
+/* ------------------------------------------------------------------ */
+/* ServiceCard                                                        */
+/* ------------------------------------------------------------------ */
+function ServiceCard({ service }: { service: Service }) {
+  return (
+    <div className="group p-6 rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden">
+      <div className="flex items-center gap-6">
+        {/* Icon */}
+        <div className="shrink-0 w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
+          <service.icon size={40} className="text-accent" />
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <h3 className="text-xl font-bold mb-3">{service.title}</h3>
+          <p className="text-text-secondary text-sm leading-relaxed">
+            {service.description}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* ServicesSection                                                     */
+/* ------------------------------------------------------------------ */
 export default function ServicesSection() {
   return (
     <section className="py-24">
@@ -73,63 +103,7 @@ export default function ServicesSection() {
 
         <div className="grid sm:grid-cols-1 lg:grid-cols-2 gap-6">
           {services.map((service) => (
-            <div
-              key={service.title}
-              className="group p-6 rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden"
-            >
-              <div className="flex items-center gap-6">
-                {/* Animation/Icon Half */}
-                <div className="shrink-0 w-32 h-32 bg-accent/10 rounded-2xl flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
-                  {service.title === "Social Media Management" ? (
-                    <Lottie
-                      animationData={socialMediaAnimation}
-                      loop={true}
-                      className="w-24 h-24"
-                    />
-                  ) : service.title === "Content Creation" ? (
-                    <Lottie
-                      animationData={contentCreationAnimation}
-                      loop={true}
-                      className="w-24 h-24"
-                    />
-                  ) : service.title === "Performance Marketing" ? (
-                    <Lottie
-                      animationData={performanceAnimation}
-                      loop={true}
-                      className="w-24 h-24"
-                    />
-                  ) : service.title === "Brand Identity & Design" ? (
-                    <Lottie
-                      animationData={brandIdentityAnimation}
-                      loop={true}
-                      className="w-24 h-24"
-                    />
-                  ) : service.title === "Video Production" ? (
-                    <Lottie
-                      animationData={videoProductionAnimation}
-                      loop={true}
-                      className="w-24 h-24"
-                    />
-                  ) : service.title === "Website & Funnel Design" ? (
-                    <Lottie
-                      animationData={webDesignAnimation}
-                      loop={true}
-                      className="w-24 h-24"
-                    />
-                  ) : (
-                    <service.icon size={48} className="text-accent" />
-                  )}
-                </div>
-
-                {/* Content Half */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-bold mb-3">{service.title}</h3>
-                  <p className="text-text-secondary text-sm leading-relaxed">
-                    {service.description}
-                  </p>
-                </div>
-              </div>
-            </div>
+            <ServiceCard key={service.title} service={service} />
           ))}
         </div>
       </div>

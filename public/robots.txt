@@ -1,0 +1,10 @@
+# Hota - Creative Growth Agency
+# Allow all crawlers
+
+User-agent: *
+Allow: /
+
+# Disallow none - all pages are public
+
+# Sitemap location
+Sitemap: https://hotacreatives.in/sitemap.xml

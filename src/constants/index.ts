@@ -1,1 +1,6 @@
-export { HTTP_STATUS, STORAGE_KEYS } from "./app.constants";
+export {
+  HTTP_STATUS,
+  STORAGE_KEYS,
+  contact,
+  socialLinks,
+} from "./app.constants";

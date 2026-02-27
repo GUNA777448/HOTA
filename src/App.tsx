@@ -1,28 +1,55 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { Toaster } from "sonner";
 import { MainLayout } from "@/layouts";
-import {
-  HomePage,
-  ServicesPage,
-  PackagesPage,
-  PortfolioPage,
-  ContactPage,
-  FreeAuditPage,
-} from "@/pages";
 import { ROUTES } from "@/routes/routes";
+
+// Lazy load pages for better code splitting
+const HomePage = lazy(() => import("@/pages/HomePage"));
+const ServicesPage = lazy(() => import("@/pages/ServicesPage"));
+const PackagesPage = lazy(() => import("@/pages/PackagesPage"));
+const PortfolioPage = lazy(() => import("@/pages/PortfolioPage"));
+const ContactPage = lazy(() => import("@/pages/ContactPage"));
+const FreeAuditPage = lazy(() => import("@/pages/FreeAuditPage"));
+
+// Loading fallback component
+function PageLoader() {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-bg-primary">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-accent border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+        <p className="text-text-secondary">Loading...</p>
+      </div>
+    </div>
+  );
+}
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route path={ROUTES.HOME} element={<HomePage />} />
-          <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
-          <Route path={ROUTES.PACKAGES} element={<PackagesPage />} />
-          <Route path={ROUTES.PORTFOLIO} element={<PortfolioPage />} />
-          <Route path={ROUTES.CONTACT} element={<ContactPage />} />
-          <Route path={ROUTES.FREE_AUDIT} element={<FreeAuditPage />} />
-        </Route>
-      </Routes>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          style: {
+            background: "#141414",
+            border: "1px solid #262626",
+            color: "#f5f5f5",
+          },
+        }}
+        richColors
+      />
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path={ROUTES.HOME} element={<HomePage />} />
+            <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
+            <Route path={ROUTES.PACKAGES} element={<PackagesPage />} />
+            <Route path={ROUTES.PORTFOLIO} element={<PortfolioPage />} />
+            <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+            <Route path={ROUTES.FREE_AUDIT} element={<FreeAuditPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

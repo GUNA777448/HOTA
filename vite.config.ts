@@ -90,12 +90,24 @@ export default defineConfig({
     chunkSizeWarningLimit: 1000,
     rollupOptions: {
       output: {
-        manualChunks: {
+        manualChunks: (id) => {
           // Split vendor libraries into separate chunks
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
-          "three-vendor": ["three", "@react-three/fiber", "@react-three/drei"],
-          lottie: ["lottie-react"],
-          "ui-vendor": ["lucide-react"],
+          if (id.includes("node_modules")) {
+            if (
+              id.includes("react") ||
+              id.includes("react-dom") ||
+              id.includes("react-router")
+            ) {
+              return "react-vendor";
+            }
+            if (id.includes("three") || id.includes("@react-three")) {
+              return "three-vendor";
+            }
+
+            if (id.includes("lucide-react")) {
+              return "ui-vendor";
+            }
+          }
         },
       },
     },

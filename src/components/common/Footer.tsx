@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Instagram, Linkedin, Mail, Phone, MapPin } from "lucide-react";
+import { contact, socialLinks } from "@/constants";
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -64,40 +65,40 @@ export default function Footer() {
             </h4>
             <div className="space-y-3">
               <a
-                href="mailto:hello@hota.agency"
+                href={`mailto:${contact.email}`}
                 className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent transition-colors duration-300"
               >
                 <Mail size={16} />
-                hello@hota.agency
+                {contact.email}
               </a>
               <a
-                href="tel:+919542421108"
+                href={`tel:+${contact.phoneRaw}`}
                 className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent transition-colors duration-300"
               >
                 <Phone size={16} />
-                +91 95424 21108
+                {contact.phone}
               </a>
               <div className="flex items-center gap-2 text-sm text-text-secondary">
                 <MapPin size={16} />
-                Mumbai, India
+                {contact.locationShort}
               </div>
               <a
-                href="https://www.instagram.com/hota.creatives"
+                href={socialLinks.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent transition-colors duration-300"
               >
                 <Instagram size={16} />
-                @hota.creatives
+                {socialLinks.instagramHandle}
               </a>
               <a
-                href="https://www.linkedin.com/company/hota-creatives/"
+                href={socialLinks.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 text-sm text-text-secondary hover:text-accent transition-colors duration-300"
               >
                 <Linkedin size={16} />
-                HOTA Creatives
+                {socialLinks.linkedinName}
               </a>
             </div>
           </div>

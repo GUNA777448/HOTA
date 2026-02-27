@@ -8,20 +8,21 @@ import {
   Globe,
   CheckCircle,
   ArrowRight,
+  type LucideIcon,
 } from "lucide-react";
-import Lottie from "lottie-react";
-import socialMediaAnimation from "@/assets/animations/social-media.json";
-import videoProductionAnimation from "@/assets/animations/Video production.json";
-import contentCreationAnimation from "@/assets/animations/Content Manager.json";
-import performanceAnimation from "@/assets/animations/performance.json";
-import brandIdentityAnimation from "@/assets/animations/identity.json";
-import webDesignAnimation from "@/assets/animations/Web Design Illustration.json";
 import { ROUTES } from "@/routes";
+import { SEO } from "@/components";
 
-const services = [
+const services: {
+  icon: LucideIcon;
+  title: string;
+  tagline: string;
+  description: string;
+  features: string[];
+  deliverables: string[];
+}[] = [
   {
     icon: Megaphone,
-    animation: socialMediaAnimation,
     title: "Social Media Management",
     tagline: "Building communities that convert",
     description:
@@ -43,7 +44,6 @@ const services = [
   },
   {
     icon: Camera,
-    animation: contentCreationAnimation,
     title: "Content Creation",
     tagline: "Content that stops the scroll",
     description:
@@ -65,7 +65,6 @@ const services = [
   },
   {
     icon: BarChart3,
-    animation: performanceAnimation,
     title: "Performance Marketing",
     tagline: "Turning ad spend into revenue",
     description:
@@ -87,7 +86,6 @@ const services = [
   },
   {
     icon: Palette,
-    animation: brandIdentityAnimation,
     title: "Brand Identity & Design",
     tagline: "Make your brand unforgettable",
     description:
@@ -109,7 +107,6 @@ const services = [
   },
   {
     icon: Video,
-    animation: videoProductionAnimation,
     title: "Video Production",
     tagline: "Videos that build trust & drive sales",
     description:
@@ -131,7 +128,6 @@ const services = [
   },
   {
     icon: Globe,
-    animation: webDesignAnimation,
     title: "Website & Funnel Design",
     tagline: "Websites that work 24/7",
     description:
@@ -156,6 +152,12 @@ const services = [
 export default function ServicesPage() {
   return (
     <>
+      <SEO
+        title="Services"
+        description="Complete digital marketing services: Social Media Management, Content Creation, Performance Marketing (Meta & Google Ads), Video Production, Brand Identity, and Web Design. Turn your brand into a growth machine."
+        keywords="social media management India, content creation agency, performance marketing, Meta ads management, Google ads agency, video production Mumbai, brand identity design, web design agency India"
+        canonicalUrl="https://hotacreatives.in/services"
+      />
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -198,11 +200,9 @@ export default function ServicesPage() {
                   className={`${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
                 >
                   <div className="bg-bg-card border border-border rounded-3xl p-12 flex items-center justify-center">
-                    <Lottie
-                      animationData={service.animation}
-                      loop={true}
-                      className="w-full max-w-md"
-                    />
+                    <div className="w-40 h-40 bg-accent/10 rounded-3xl flex items-center justify-center">
+                      <service.icon size={72} className="text-accent" />
+                    </div>
                   </div>
                 </div>
 

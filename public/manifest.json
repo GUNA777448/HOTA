@@ -1,0 +1,21 @@
+{
+  "name": "Hota - Creative Growth Agency",
+  "short_name": "Hota",
+  "description": "We Don't Just Post. We Position. Full-stack creative growth agency specializing in content creation, digital marketing, and brand positioning for mid and premium clients.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/hota-logo.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "marketing", "design"],
+  "lang": "en-US",
+  "dir": "ltr"
+}

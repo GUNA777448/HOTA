@@ -1,20 +1,27 @@
 import { ExternalLink } from "lucide-react";
+import { SEO } from "@/components";
 
 const portfolioItems = [
   {
-    title: "D2C Fashion Brand Launch",
-    category: "Social Media",
+    title: "Restaurant Web application ",
+    category: "Food & Beverage",
     description:
-      "Complete Instagram launch strategy for a D2C fashion brand. Achieved 10K organic followers in 30 days with engaging reels and carousel content.",
+      "A fully responsive web application for a restaurant chain, featuring menu browsing, online ordering, and reservation management.",
     image:
-      "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=600&h=400&fit=crop",
-    results: "10K followers in 30 days",
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772165721/Screenshot_2025-11-12_151018_v1va6o.png",
+    results: "Improved customer engagement and streamlined operations",
   },
 ];
 
 export default function PortfolioPage() {
   return (
     <>
+      <SEO
+        title="Portfolio"
+        description="See real results from our brand growth projects. From D2C fashion launches to F&B social media campaigns - explore portfolios that speak results."
+        keywords="digital marketing portfolio India, social media case studies, brand growth portfolio, Instagram portfolio, content creation examples"
+        canonicalUrl="https://hotacreatives.in/portfolio"
+      />
       {/* Hero */}
       <section className="py-24 bg-bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
