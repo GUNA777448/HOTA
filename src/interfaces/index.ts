@@ -1,2 +1,9 @@
 // Barrel export for all interfaces & types
-// Example: export type { IUser } from './IUser';
+export type {
+  BlogAuthor,
+  BlogCategory,
+  BlogTag,
+  BlogHeading,
+  BlogContentBlock,
+  BlogPost,
+} from "./blog.interfaces";

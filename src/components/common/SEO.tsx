@@ -9,6 +9,7 @@ interface SEOProps {
   canonicalUrl?: string;
 }
 
+
 const defaultSEO = {
   title: "HOTA — India's Creative Growth Agency",
   description:

@@ -1,7 +1,10 @@
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import LottieAnimation from "../common/LottieAnimation";
+import { LOTTIE_ANIMATIONS } from "../../constants";
 
 export default function CTASection() {
+  const navigate = useNavigate();
   return (
     <section className="py-24 bg-bg-secondary relative overflow-hidden">
       {/* Background elements */}
@@ -10,6 +13,10 @@ export default function CTASection() {
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <LottieAnimation
+          src={LOTTIE_ANIMATIONS.cta}
+          className="w-40 h-40 mx-auto mb-6"
+        />
         <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight mb-6">
           Ready to Stop Posting
           <br />
@@ -21,25 +28,22 @@ export default function CTASection() {
           clarity.
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link
-            to="/free-audit"
-            className="group bg-accent hover:bg-accent-hover text-black font-bold text-base px-10 py-4 rounded-full transition-all duration-300 hover:scale-105 flex items-center gap-2"
-          >
-            Get Your Free Brand Audit
-            <ArrowRight
-              size={18}
-              className="group-hover:translate-x-1 transition-transform"
-            />
-          </Link>
-          <a
-            href="https://wa.me/919542421108?text=Hi!%20I%27m%20interested%20in%20Hota%27s%20services."
-            target="_blank"
-            rel="noopener noreferrer"
-            className="border border-border hover:border-[#25D366] text-text-primary font-medium text-base px-10 py-4 rounded-full transition-all duration-300 hover:text-[#25D366]"
-          >
-            WhatsApp Us Directly
-          </a>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+          <InteractiveHoverButton
+            text="Get Your Free Brand Audit"
+            onClick={() => navigate("/free-audit")}
+            className="w-auto px-10 py-4 text-base font-bold"
+          />
+          <InteractiveHoverButton
+            text="WhatsApp Us Directly"
+            onClick={() =>
+              window.open(
+                "https://wa.me/919542421108?text=Hi!%20I%27m%20interested%20in%20Hota%27s%20services.",
+                "_blank",
+              )
+            }
+            className="w-auto px-10 py-4 text-base font-medium border-border"
+          />
         </div>
       </div>
     </section>

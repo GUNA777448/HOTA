@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowRight, Check } from "lucide-react";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 
 const packages = [
   {
@@ -59,6 +60,7 @@ const packages = [
 ];
 
 export default function PackagesPreview() {
+  const navigate = useNavigate();
   return (
     <section className="py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -115,16 +117,11 @@ export default function PackagesPreview() {
                 ))}
               </ul>
 
-              <Link
-                to="/contact"
-                className={`block w-full text-center font-bold text-sm py-4 rounded-full transition-all duration-300 ${
-                  pkg.popular
-                    ? "bg-accent hover:bg-accent-hover text-black"
-                    : "border border-border hover:border-accent text-text-primary hover:text-accent"
-                }`}
-              >
-                Get Started
-              </Link>
+              <InteractiveHoverButton
+                text="Get Started"
+                onClick={() => navigate("/contact")}
+                className="w-full py-3 text-sm font-bold"
+              />
             </div>
           ))}
         </div>

@@ -13,7 +13,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useSEO } from "../components/common/SEO";
-import { contact, socialLinks } from "../constants";
+import { contact, socialLinks, LOTTIE_ANIMATIONS } from "../constants";
+import LottieAnimation from "../components/common/LottieAnimation";
 
 const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwaJLwpyoWSCeh5NklVgjTAR7jPvOlwZYbCWMxkYU9k_KWIpuVjaKyFixzFR8h9FNbF/exec";
@@ -139,6 +140,10 @@ export default function ContactPage() {
             Drop us a message, slide into our DMs, or just WhatsApp us. We
             respond faster than your current agency delivers creatives.
           </p>
+          <LottieAnimation
+            src={LOTTIE_ANIMATIONS.contact}
+            className="w-52 h-52 mx-auto mt-8"
+          />
         </div>
       </section>
 

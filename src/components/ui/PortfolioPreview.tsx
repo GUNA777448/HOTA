@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, ExternalLink } from "lucide-react";
+import LottieAnimation from "../common/LottieAnimation";
+import { LOTTIE_ANIMATIONS } from "../../constants";
 
 const portfolioItems = [
   {
@@ -36,6 +38,14 @@ export default function PortfolioPreview() {
               className="group-hover:translate-x-1 transition-transform"
             />
           </Link>
+        </div>
+
+        {/* Decorative animation */}
+        <div className="flex justify-center mb-10">
+          <LottieAnimation
+            src={LOTTIE_ANIMATIONS.portfolio}
+            className="w-56 h-56"
+          />
         </div>
 
         <div className="flex justify-center">

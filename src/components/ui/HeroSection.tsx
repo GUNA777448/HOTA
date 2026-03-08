@@ -1,8 +1,11 @@
-import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles } from "lucide-react";
-import cuateImage from "../../assets/cuate.png";
+import { useNavigate } from "react-router-dom";
+import { Sparkles } from "lucide-react";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import LottieAnimation from "../common/LottieAnimation";
+import { LOTTIE_ANIMATIONS } from "../../constants";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
@@ -35,34 +38,27 @@ export default function HeroSection() {
               for startups, e-commerce brands, and businesses ready to scale
               from ₹50K to ₹3L+ monthly.
             </p>
-
+    
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-4 animate-fade-in-up animation-delay-400">
-              <Link
-                to="/free-audit"
-                className="group bg-accent hover:bg-accent-hover text-black font-bold text-base px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 flex items-center gap-2"
-              >
-                Get Your Free Brand Audit
-                <ArrowRight
-                  size={18}
-                  className="group-hover:translate-x-1 transition-transform"
-                />
-              </Link>
-              {/* <Link
-                to="/packages"
-                className="border border-border hover:border-accent text-text-primary font-medium text-base px-8 py-4 rounded-full transition-all duration-300 hover:text-accent"
-              >
-                View Packages
-              </Link> */}
+            <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-6 animate-fade-in-up animation-delay-400">
+              <InteractiveHoverButton
+                text="Get Your Free Brand Audit"
+                onClick={() => navigate("/free-audit")}
+                className="w-auto px-10 py-4 text-base font-bold"
+              />
+              <InteractiveHoverButton
+                text="View Packages"
+                onClick={() => navigate("/packages")}
+                className="w-auto px-10 py-4 text-base font-medium border-border"
+              />
             </div>
           </div>
 
-          {/* Right: Illustration */}
+          {/* Right: Lottie Animation */}
           <div className="hidden lg:flex items-center justify-center animate-fade-in-up animation-delay-800">
-            <img
-              src={cuateImage}
-              alt="Creative Growth Illustration"
-              className="w-full max-w-lg drop-shadow-2xl"
+            <LottieAnimation
+              src={LOTTIE_ANIMATIONS.hero}
+              className="w-full max-w-2xl"
             />
           </div>
         </div>

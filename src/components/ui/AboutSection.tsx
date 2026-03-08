@@ -1,12 +1,18 @@
 import { Target, Zap, TrendingUp } from "lucide-react";
+import LottieAnimation from "../common/LottieAnimation";
+import { LOTTIE_ANIMATIONS } from "../../constants";
 
 export default function AboutSection() {
   return (
     <section className="py-24 bg-bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Content */}
+          {/* Left: Content + Animation */}
           <div>
+            <LottieAnimation
+              src={LOTTIE_ANIMATIONS.about}
+              className="w-64 h-64 mx-auto lg:mx-0 mb-8"
+            />
             <span className="text-xs font-bold uppercase tracking-widest text-accent">
               About Hota
             </span>

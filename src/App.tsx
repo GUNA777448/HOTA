@@ -11,6 +11,10 @@ const PackagesPage = lazy(() => import("@/pages/PackagesPage"));
 const PortfolioPage = lazy(() => import("@/pages/PortfolioPage"));
 const ContactPage = lazy(() => import("@/pages/ContactPage"));
 const FreeAuditPage = lazy(() => import("@/pages/FreeAuditPage"));
+const BlogListingPage = lazy(() => import("@/pages/BlogListingPage"));
+const BlogArticlePage = lazy(() => import("@/pages/BlogArticlePage"));
+const BlogAuthorPage = lazy(() => import("@/pages/BlogAuthorPage"));
+const BlogCategoryPage = lazy(() => import("@/pages/BlogCategoryPage"));
 
 // Loading fallback component
 function PageLoader() {
@@ -45,6 +49,10 @@ function App() {
             <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
             <Route path={ROUTES.PACKAGES} element={<PackagesPage />} />
             <Route path={ROUTES.PORTFOLIO} element={<PortfolioPage />} />
+            <Route path={ROUTES.BLOG} element={<BlogListingPage />} />
+            <Route path={ROUTES.BLOG_ARTICLE} element={<BlogArticlePage />} />
+            <Route path={ROUTES.BLOG_AUTHOR} element={<BlogAuthorPage />} />
+            <Route path={ROUTES.BLOG_CATEGORY} element={<BlogCategoryPage />} />
             <Route path={ROUTES.CONTACT} element={<ContactPage />} />
             <Route path={ROUTES.FREE_AUDIT} element={<FreeAuditPage />} />
           </Route>

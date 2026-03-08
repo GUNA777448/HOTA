@@ -1,20 +1,15 @@
-import { Link } from "react-router-dom";
-import {
-  Megaphone,
-  Camera,
-  BarChart3,
-  Palette,
-  Video,
-  Globe,
-  CheckCircle,
-  ArrowRight,
-  type LucideIcon,
-} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { CheckCircle } from "lucide-react";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
 import { ROUTES } from "@/routes";
+import LottieAnimation from "@/components/common/LottieAnimation";
+import { LOTTIE_ANIMATIONS } from "@/constants";
+import { useInView } from "@/hooks";
+import cuateImg from "@/assets/cuate.png";
 // import { SEO } from "@/components";
 
 const services: {
-  icon: LucideIcon;
+  animation: string;
   title: string;
   tagline: string;
   description: string;
@@ -22,7 +17,7 @@ const services: {
   deliverables: string[];
 }[] = [
   {
-    icon: Megaphone,
+    animation: LOTTIE_ANIMATIONS.socialMedia,
     title: "Social Media Management",
     tagline: "Building communities that convert",
     description:
@@ -43,7 +38,7 @@ const services: {
     ],
   },
   {
-    icon: Camera,
+    animation: LOTTIE_ANIMATIONS.contentCreation,
     title: "Content Creation",
     tagline: "Content that stops the scroll",
     description:
@@ -64,7 +59,7 @@ const services: {
     ],
   },
   {
-    icon: BarChart3,
+    animation: LOTTIE_ANIMATIONS.performanceMarketing,
     title: "Performance Marketing",
     tagline: "Turning ad spend into revenue",
     description:
@@ -85,7 +80,7 @@ const services: {
     ],
   },
   {
-    icon: Palette,
+    animation: LOTTIE_ANIMATIONS.brandIdentity,
     title: "Brand Identity & Design",
     tagline: "Make your brand unforgettable",
     description:
@@ -106,7 +101,7 @@ const services: {
     ],
   },
   {
-    icon: Video,
+    animation: LOTTIE_ANIMATIONS.videoProduction,
     title: "Video Production",
     tagline: "Videos that build trust & drive sales",
     description:
@@ -127,7 +122,7 @@ const services: {
     ],
   },
   {
-    icon: Globe,
+    animation: LOTTIE_ANIMATIONS.websiteDesign,
     title: "Website & Funnel Design",
     tagline: "Websites that work 24/7",
     description:
@@ -149,34 +144,135 @@ const services: {
   },
 ];
 
+/* ── Animated service block ──────────────────────────────────────── */
+function ServiceBlock({
+  service,
+  index,
+}: {
+  service: (typeof services)[number];
+  index: number;
+}) {
+  const { ref, inView } = useInView({ threshold: 0.1 });
+  const isOdd = index % 2 === 1;
+
+  return (
+    <div
+      ref={ref}
+      className={`grid lg:grid-cols-2 gap-12 items-center transition-all duration-700 ${
+        isOdd ? "lg:flex-row-reverse" : ""
+      } ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"}`}
+    >
+      {/* Animation Side */}
+      <div className={isOdd ? "lg:order-2" : "lg:order-1"}>
+        <div className="bg-bg-card border border-border rounded-3xl p-12 flex items-center justify-center">
+          <LottieAnimation
+            src={service.animation}
+            className="w-64 h-64"
+            loop
+            autoplay
+          />
+        </div>
+      </div>
+
+      {/* Content Side */}
+      <div className={isOdd ? "lg:order-1" : "lg:order-2"}>
+        <div className="inline-flex items-center gap-3 bg-accent/10 rounded-full px-4 py-2 mb-6">
+          <LottieAnimation
+            src={service.animation}
+            className="w-6 h-6"
+            loop
+            autoplay
+          />
+          <span className="text-xs font-bold uppercase tracking-widest text-accent">
+            {service.title}
+          </span>
+        </div>
+
+        <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-4">
+          {service.tagline}
+        </h2>
+
+        <p className="text-text-secondary text-lg mb-8 leading-relaxed">
+          {service.description}
+        </p>
+
+        {/* Features */}
+        <div className="mb-8">
+          <h3 className="text-xl font-bold mb-4">What's Included:</h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {service.features.map((feature) => (
+              <div key={feature} className="flex items-start gap-2 text-sm">
+                <CheckCircle
+                  size={18}
+                  className="text-accent shrink-0 mt-0.5"
+                />
+                <span className="text-text-secondary">{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Deliverables */}
+        <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
+          <h4 className="font-bold mb-3 text-accent">Deliverables:</h4>
+          <ul className="space-y-2">
+            {service.deliverables.map((item) => (
+              <li
+                key={item}
+                className="text-sm text-text-secondary flex items-start gap-2"
+              >
+                <span className="text-accent">•</span>
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ServicesPage() {
+  const navigate = useNavigate();
   return (
     <>
       {/* SEO removed */}
       {/* SEO removed */}
       {/* Hero Section */}
       <section className="pt-32 pb-16 bg-bg-secondary">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-accent">
-            Our Services
-          </span>
-          <h1 className="text-5xl sm:text-7xl font-black tracking-tight mt-4">
-            Everything You Need
-            <br />
-            <span className="text-accent">To Grow Online</span>
-          </h1>
-          <p className="text-text-secondary text-lg mt-6 max-w-2xl mx-auto">
-            From strategy to execution, we handle every aspect of your digital
-            presence so you can focus on what you do best — running your
-            business.
-          </p>
-          <Link
-            to={ROUTES.FREE_AUDIT}
-            className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-black font-bold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 mt-8"
-          >
-            Get Your Free Audit
-            <ArrowRight size={20} />
-          </Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12">
+          {/* Text */}
+          <div className="flex-1 text-center lg:text-left">
+            <span className="text-xs font-bold uppercase tracking-widest text-accent">
+              Our Services
+            </span>
+            <h1 className="text-5xl sm:text-7xl font-black tracking-tight mt-4">
+              Everything You Need
+              <br />
+              <span className="text-accent">To Grow Online</span>
+            </h1>
+            <p className="text-text-secondary text-lg mt-6 max-w-2xl">
+              From strategy to execution, we handle every aspect of your digital
+              presence so you can focus on what you do best — running your
+              business.
+            </p>
+            <div className="mt-8">
+              <InteractiveHoverButton
+                text="Get Your Free Audit"
+                onClick={() => navigate(ROUTES.FREE_AUDIT)}
+                className="w-auto px-10 py-4 text-base font-bold"
+              />
+            </div>
+          </div>
+
+          {/* Hero Image */}
+          <div className="flex-1 flex justify-center">
+            <img
+              src={cuateImg}
+              alt="Digital marketing services illustration"
+              className="w-full max-w-lg drop-shadow-2xl"
+            />
+          </div>
         </div>
       </section>
 
@@ -185,80 +281,11 @@ export default function ServicesPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-32">
             {services.map((service, index) => (
-              <div
+              <ServiceBlock
                 key={service.title}
-                className={`grid lg:grid-cols-2 gap-12 items-center ${
-                  index % 2 === 1 ? "lg:flex-row-reverse" : ""
-                }`}
-              >
-                {/* Animation Side */}
-                <div
-                  className={`${index % 2 === 1 ? "lg:order-2" : "lg:order-1"}`}
-                >
-                  <div className="bg-bg-card border border-border rounded-3xl p-12 flex items-center justify-center">
-                    <div className="w-40 h-40 bg-accent/10 rounded-3xl flex items-center justify-center">
-                      <service.icon size={72} className="text-accent" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Content Side */}
-                <div
-                  className={`${index % 2 === 1 ? "lg:order-1" : "lg:order-2"}`}
-                >
-                  <div className="inline-flex items-center gap-3 bg-accent/10 rounded-full px-4 py-2 mb-6">
-                    <service.icon size={20} className="text-accent" />
-                    <span className="text-xs font-bold uppercase tracking-widest text-accent">
-                      {service.title}
-                    </span>
-                  </div>
-
-                  <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-4">
-                    {service.tagline}
-                  </h2>
-
-                  <p className="text-text-secondary text-lg mb-8 leading-relaxed">
-                    {service.description}
-                  </p>
-
-                  {/* Features */}
-                  <div className="mb-8">
-                    <h3 className="text-xl font-bold mb-4">What's Included:</h3>
-                    <div className="grid sm:grid-cols-2 gap-3">
-                      {service.features.map((feature) => (
-                        <div
-                          key={feature}
-                          className="flex items-start gap-2 text-sm"
-                        >
-                          <CheckCircle
-                            size={18}
-                            className="text-accent shrink-0 mt-0.5"
-                          />
-                          <span className="text-text-secondary">{feature}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Deliverables */}
-                  <div className="bg-accent/5 border border-accent/20 rounded-2xl p-6">
-                    <h4 className="font-bold mb-3 text-accent">
-                      Deliverables:
-                    </h4>
-                    <ul className="space-y-2">
-                      {service.deliverables.map((item) => (
-                        <li
-                          key={item}
-                          className="text-sm text-text-secondary flex items-start gap-2"
-                        >
-                          <span className="text-accent">•</span>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                </div>
-              </div>
+                service={service}
+                index={index}
+              />
             ))}
           </div>
         </div>
@@ -274,20 +301,17 @@ export default function ServicesPage() {
             Let's talk about which services are right for your business goals
             and budget.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to={ROUTES.FREE_AUDIT}
-              className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-black font-bold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105"
-            >
-              Get Your Free Audit
-              <ArrowRight size={20} />
-            </Link>
-            <Link
-              to={ROUTES.CONTACT}
-              className="inline-flex items-center gap-2 bg-transparent border-2 border-accent text-accent hover:bg-accent hover:text-black font-bold px-8 py-4 rounded-full transition-all duration-300"
-            >
-              Let's Talk
-            </Link>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center">
+            <InteractiveHoverButton
+              text="Get Your Free Audit"
+              onClick={() => navigate(ROUTES.FREE_AUDIT)}
+              className="w-auto px-10 py-4 text-base font-bold"
+            />
+            <InteractiveHoverButton
+              text="Let's Talk"
+              onClick={() => navigate(ROUTES.CONTACT)}
+              className="w-auto px-10 py-4 text-base font-medium border-border"
+            />
           </div>
         </div>
       </section>

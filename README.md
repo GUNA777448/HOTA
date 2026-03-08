@@ -1,8 +1,15 @@
 # HOTA - Creative Growth Agency Website
 
+![Vercel Deploy](https://img.shields.io/badge/deploy-vercel-brightgreen)
+![License](https://img.shields.io/badge/license-proprietary-red)
+![React](https://img.shields.io/badge/react-19.2.0-blue)
+![TypeScript](https://img.shields.io/badge/typescript-5.9-blue)
+
 > **"We Don't Post. We Position."**
 
-A modern, immersive website for HOTA Creative Growth Agency - a premium digital agency specializing in content creation, brand positioning, and full-scale digital growth strategies for startups, e-commerce brands, and scaling businesses across India.
+A modern, immersive website for **HOTA Creative Growth Agency** — a premium digital agency specializing in content creation, brand positioning, and full-scale digital growth strategies for startups, e-commerce brands, and scaling businesses across India.
+
+---
 
 ## 🎯 Project Overview
 
@@ -15,6 +22,14 @@ HOTA's website is built to attract mid-to-premium tier clients (₹50K - ₹3L+ 
 - Display portfolio and case studies
 - Provide seamless inquiry channels (WhatsApp, Instagram, Contact Form)
 - Establish credibility and premium brand perception
+
+## 🖼️ Screenshots
+
+| Home Page                                     | Portfolio                                               | 3D Effects                                |
+| --------------------------------------------- | ------------------------------------------------------- | ----------------------------------------- |
+| ![Home Screenshot](docs/screenshots/home.png) | ![Portfolio Screenshot](docs/screenshots/portfolio.png) | ![3D Screenshot](docs/screenshots/3d.png) |
+
+---
 
 ## ✨ Features
 
@@ -48,6 +63,8 @@ HOTA's website is built to attract mid-to-premium tier clients (₹50K - ₹3L+ 
 - Optimized build with Vite
 - TailwindCSS 4 for utility-first styling
 
+---
+
 ## 🛠️ Tech Stack
 
 ### Core
@@ -72,11 +89,15 @@ HOTA's website is built to attract mid-to-premium tier clients (₹50K - ₹3L+ 
 
 - **React Router DOM 7.13.1** - Client-side routing
 
+---
+
 ## 📋 Prerequisites
 
 - **Node.js** 18+ (recommended: 20+)
 - **npm** or **yarn** package manager
 - Modern web browser with WebGL support
+
+---
 
 ## 🚀 Getting Started
 
@@ -85,7 +106,7 @@ HOTA's website is built to attract mid-to-premium tier clients (₹50K - ₹3L+ 
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/your-org/HOTA.git
    cd HOTA
    ```
 
@@ -105,6 +126,8 @@ HOTA's website is built to attract mid-to-premium tier clients (₹50K - ₹3L+ 
    - Navigate to `http://localhost:5173`
    - Hot Module Replacement (HMR) is enabled for instant feedback
 
+---
+
 ## 📜 Available Scripts
 
 | Command           | Description                                           |
@@ -113,6 +136,8 @@ HOTA's website is built to attract mid-to-premium tier clients (₹50K - ₹3L+ 
 | `npm run build`   | Build for production (outputs to `/dist`)             |
 | `npm run preview` | Preview production build locally                      |
 | `npm run lint`    | Run ESLint to check code quality                      |
+
+---
 
 ## 📁 Project Structure
 
@@ -173,6 +198,8 @@ HOTA/
 └── README.md                 # This file
 ```
 
+---
+
 ## 🎨 Design System
 
 ### Color Palette
@@ -193,6 +220,8 @@ HOTA/
 - **Cards**: Dark backgrounds with border highlights and hover transitions
 - **3D Elements**: Low-poly geometric shapes with wireframe aesthetics
 
+---
+
 ## 🌐 Browser Support
 
 - Chrome/Edge 90+
@@ -201,6 +230,8 @@ HOTA/
 - Opera 76+
 
 **Note**: WebGL support is required for 3D features. The site gracefully handles browsers without WebGL by hiding 3D components.
+
+---
 
 ## 🔧 Configuration
 
@@ -221,6 +252,8 @@ Create a `.env` file for environment-specific configuration:
 VITE_API_URL=your_api_url
 VITE_WHATSAPP_NUMBER=your_whatsapp_number
 ```
+
+---
 
 ## 🏗️ Build & Deployment
 
@@ -248,20 +281,51 @@ npm run preview
 - **GitHub Pages**: Static hosting with Actions
 - **Custom Server**: Serve the `/dist` folder
 
+---
+
 ## 🤝 Contributing
 
-This is a private client project. For any questions or contributions, please contact the development team.
+This is a private client project. For any questions or contributions, please contact the development team at [hello@hota.agency](mailto:hello@hota.agency).
+
+---
 
 ## 📄 License
 
-Proprietary - All rights reserved by HOTA Creative Growth Agency
+Proprietary — All rights reserved by HOTA Creative Growth Agency
+
+---
 
 ## 📞 Contact
 
-- **Website**: [Your Website URL]
-- **Email**: [Your Email]
-- **WhatsApp**: [Your WhatsApp Number]
-- **Instagram**: [Your Instagram Handle]
+- **Website**: [https://hota.agency](https://hota.agency)
+- **Email**: [hello@hota.agency](mailto:hello@hota.agency)
+- **WhatsApp**: [+91-9876543210](https://wa.me/919876543210)
+- **Instagram**: [@hota.agency](https://instagram.com/hota.agency)
+
+---
+
+## ❓ FAQ / Troubleshooting
+
+### The dev server doesn't start or crashes
+
+- Ensure Node.js 18+ is installed (`node -v`)
+- Delete `node_modules` and run `npm install` again
+- Check for missing environment variables in `.env`
+
+### 3D elements are not visible
+
+- Make sure your browser supports WebGL
+- Try disabling browser extensions that may block scripts
+
+### How do I deploy to Vercel/Netlify?
+
+- See the **Build & Deployment** section above for step-by-step instructions
+
+### Where can I find more documentation?
+
+- See the `docs/` folder for PRD and additional docs
+
+---
 
 ---
 

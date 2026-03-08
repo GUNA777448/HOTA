@@ -1,55 +1,49 @@
-import {
-  Megaphone,
-  Camera,
-  BarChart3,
-  Palette,
-  Video,
-  Globe,
-  type LucideIcon,
-} from "lucide-react";
+import LottieAnimation from "../common/LottieAnimation";
+import { LOTTIE_ANIMATIONS } from "../../constants";
+import { useInView } from "../../hooks";
 
 /* ------------------------------------------------------------------ */
 /* Service data                                                       */
 /* ------------------------------------------------------------------ */
 interface Service {
-  icon: LucideIcon;
+  animation: string;
   title: string;
   description: string;
 }
 
 const services: Service[] = [
   {
-    icon: Megaphone,
+    animation: LOTTIE_ANIMATIONS.socialMedia,
     title: "Social Media Management",
     description:
       "End-to-end management of your Instagram, Facebook, LinkedIn, and X (Twitter) presence with daily content, engagement, and community building.",
   },
   {
-    icon: Camera,
+    animation: LOTTIE_ANIMATIONS.contentCreation,
     title: "Content Creation",
     description:
       "Reels, carousels, stories, memes, and static posts — designed to resonate with your Indian audience and drive meaningful engagement.",
   },
   {
-    icon: BarChart3,
+    animation: LOTTIE_ANIMATIONS.performanceMarketing,
     title: "Performance Marketing",
     description:
       "Meta Ads, Google Ads, and campaign management optimised for ROAS. We turn ad spend into revenue with data-driven strategies.",
   },
   {
-    icon: Palette,
+    animation: LOTTIE_ANIMATIONS.brandIdentity,
     title: "Brand Identity & Design",
     description:
       "Logo design, brand guidelines, visual identity systems, and packaging design that makes your brand look like a ₹100 Cr company from day one.",
   },
   {
-    icon: Video,
+    animation: LOTTIE_ANIMATIONS.videoProduction,
     title: "Video Production",
     description:
       "Product shoots, brand films, testimonial videos, and UGC-style content that builds trust and drives conversions across platforms.",
   },
   {
-    icon: Globe,
+    animation: LOTTIE_ANIMATIONS.websiteDesign,
     title: "Website & Funnel Design",
     description:
       "High-converting landing pages, sales funnels, and brand websites that don't just look good — they generate leads 24/7.",
@@ -59,13 +53,27 @@ const services: Service[] = [
 /* ------------------------------------------------------------------ */
 /* ServiceCard                                                        */
 /* ------------------------------------------------------------------ */
-function ServiceCard({ service }: { service: Service }) {
+function ServiceCard({ service, index }: { service: Service; index: number }) {
+  const { ref, inView } = useInView({ threshold: 0.1 });
+
   return (
-    <div className="group p-6 rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden">
+    <div
+      ref={ref}
+      className={`group p-6 rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-500 hover:-translate-y-1 relative overflow-hidden ${
+        inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
+      }`}
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
+      {" "}
       <div className="flex items-center gap-6">
-        {/* Icon */}
+        {/* Animation */}
         <div className="shrink-0 w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
-          <service.icon size={40} className="text-accent" />
+          <LottieAnimation
+            src={service.animation}
+            className="w-16 h-16"
+            loop
+            autoplay
+          />
         </div>
 
         {/* Content */}
@@ -99,11 +107,15 @@ export default function ServicesSection() {
             From content that converts to ads that scale — we handle every
             aspect of your digital growth so you can focus on your business.
           </p>
+          <LottieAnimation
+            src={LOTTIE_ANIMATIONS.services}
+            className="w-48 h-48 mx-auto mt-8"
+          />
         </div>
 
         <div className="grid sm:grid-cols-1 lg:grid-cols-2 gap-6">
-          {services.map((service) => (
-            <ServiceCard key={service.title} service={service} />
+          {services.map((service, index) => (
+            <ServiceCard key={service.title} service={service} index={index} />
           ))}
         </div>
       </div>

@@ -8,6 +8,7 @@ const navLinks = [
   { name: "Services", path: "/services" },
   // { name: "Packages", path: "/packages" },
   { name: "Portfolio", path: "/portfolio" },
+  { name: "Blog", path: "/blog" },
   { name: "Contact", path: "/contact" },
 ];
 
@@ -35,9 +36,13 @@ export default function Navbar() {
                 key={link.path}
                 to={link.path}
                 className={`text-sm font-medium uppercase tracking-wider transition-colors duration-300 hover:text-accent ${
-                  location.pathname === link.path
-                    ? "text-accent"
-                    : "text-text-secondary"
+                  link.path === "/"
+                    ? location.pathname === "/"
+                      ? "text-accent"
+                      : "text-text-secondary"
+                    : location.pathname.startsWith(link.path)
+                      ? "text-accent"
+                      : "text-text-secondary"
                 }`}
               >
                 {link.name}
@@ -72,9 +77,13 @@ export default function Navbar() {
                 to={link.path}
                 onClick={() => setIsOpen(false)}
                 className={`block text-lg font-medium transition-colors duration-300 hover:text-accent ${
-                  location.pathname === link.path
-                    ? "text-accent"
-                    : "text-text-secondary"
+                  link.path === "/"
+                    ? location.pathname === "/"
+                      ? "text-accent"
+                      : "text-text-secondary"
+                    : location.pathname.startsWith(link.path)
+                      ? "text-accent"
+                      : "text-text-secondary"
                 }`}
               >
                 {link.name}
