@@ -58,7 +58,7 @@ export default function HeroSection() {
           <div className="hidden lg:flex items-center justify-center animate-fade-in-up animation-delay-800">
             <LottieAnimation
               src={LOTTIE_ANIMATIONS.hero}
-              className="w-full max-w-2xl"
+              className="w-full h-full max-w-md max-h-md"
             />
           </div>
         </div>
