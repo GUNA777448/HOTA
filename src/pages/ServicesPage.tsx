@@ -9,7 +9,8 @@ import cuateImg from "@/assets/cuate.png";
 // import { SEO } from "@/components";
 
 const services: {
-  animation: string;
+  animation?: string;
+  image?: string;
   title: string;
   tagline: string;
   description: string;
@@ -17,7 +18,8 @@ const services: {
   deliverables: string[];
 }[] = [
   {
-    animation: LOTTIE_ANIMATIONS.socialMedia,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772949005/Website_setup-pana_kdmoks.svg",
     title: "Social Media Management",
     tagline: "Building communities that convert",
     description:
@@ -38,7 +40,8 @@ const services: {
     ],
   },
   {
-    animation: LOTTIE_ANIMATIONS.contentCreation,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948840/About_us_page-amico_x6pzpn.svg",
     title: "Content Creation",
     tagline: "Content that stops the scroll",
     description:
@@ -59,7 +62,8 @@ const services: {
     ],
   },
   {
-    animation: LOTTIE_ANIMATIONS.performanceMarketing,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948723/Content_creator-amico_1_dkabfw.svg",
     title: "Performance Marketing",
     tagline: "Turning ad spend into revenue",
     description:
@@ -80,7 +84,8 @@ const services: {
     ],
   },
   {
-    animation: LOTTIE_ANIMATIONS.brandIdentity,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948723/Videographer-pana_gladr0.svg",
     title: "Brand Identity & Design",
     tagline: "Make your brand unforgettable",
     description:
@@ -101,7 +106,8 @@ const services: {
     ],
   },
   {
-    animation: LOTTIE_ANIMATIONS.videoProduction,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948722/Mobile_Marketing-pana_x02k3u.svg",
     title: "Video Production",
     tagline: "Videos that build trust & drive sales",
     description:
@@ -122,7 +128,7 @@ const services: {
     ],
   },
   {
-    animation: LOTTIE_ANIMATIONS.websiteDesign,
+    animation: LOTTIE_ANIMATIONS.services,
     title: "Website & Funnel Design",
     tagline: "Websites that work 24/7",
     description:
@@ -165,24 +171,36 @@ function ServiceBlock({
       {/* Animation Side */}
       <div className={isOdd ? "lg:order-2" : "lg:order-1"}>
         <div className="bg-bg-card border border-border rounded-3xl p-12 flex items-center justify-center">
-          <LottieAnimation
-            src={service.animation}
-            className="w-64 h-64"
-            loop
-            autoplay
-          />
+          {service.image ? (
+            <img
+              src={service.image}
+              alt={service.title}
+              className="w-64 h-64"
+            />
+          ) : (
+            <LottieAnimation
+              src={service.animation!}
+              className="w-64 h-64"
+              loop
+              autoplay
+            />
+          )}
         </div>
       </div>
 
       {/* Content Side */}
       <div className={isOdd ? "lg:order-1" : "lg:order-2"}>
         <div className="inline-flex items-center gap-3 bg-accent/10 rounded-full px-4 py-2 mb-6">
-          <LottieAnimation
-            src={service.animation}
-            className="w-6 h-6"
-            loop
-            autoplay
-          />
+          {service.image ? (
+            <img src={service.image} alt={service.title} className="w-6 h-6" />
+          ) : (
+            <LottieAnimation
+              src={service.animation!}
+              className="w-6 h-6"
+              loop
+              autoplay
+            />
+          )}
           <span className="text-xs font-bold uppercase tracking-widest text-accent">
             {service.title}
           </span>

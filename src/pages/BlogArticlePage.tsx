@@ -31,7 +31,7 @@ export default function BlogArticlePage() {
   );
 
   const relatedPosts = useMemo(
-    () => (post ? getRelatedPosts(post.id) : []),
+    () => (post ? getRelatedPosts(post) : []),
     [post],
   );
 

@@ -4,7 +4,6 @@ import { Linkedin, Twitter, Instagram, Globe } from "lucide-react";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogSEO from "@/components/blog/BlogSEO";
 import {
-  BLOG_AUTHORS,
   getBlogAuthorBySlug,
   getPostsByAuthor,
 } from "@/constants/blog.constants";

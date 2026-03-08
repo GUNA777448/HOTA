@@ -3,7 +3,6 @@ import { useMemo } from "react";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogSEO from "@/components/blog/BlogSEO";
 import {
-  BLOG_CATEGORIES,
   getBlogCategoryBySlug,
   getPostsByCategory,
 } from "@/constants/blog.constants";

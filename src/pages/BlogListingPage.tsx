@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogSearch from "@/components/blog/BlogSearch";
 import BlogCategoryFilter from "@/components/blog/BlogCategoryFilter";
@@ -48,7 +48,9 @@ export default function BlogListingPage() {
   };
 
   const { ref: heroRef, inView: heroInView } = useInView({ threshold: 0.1 });
-  const { ref: filterRef, inView: filterInView } = useInView({ threshold: 0.1 });
+  const { ref: filterRef, inView: filterInView } = useInView({
+    threshold: 0.1,
+  });
   const { ref: gridRef, inView: gridInView } = useInView({ threshold: 0.05 });
 
   const showFeaturedHero =

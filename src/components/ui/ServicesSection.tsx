@@ -6,44 +6,50 @@ import { useInView } from "../../hooks";
 /* Service data                                                       */
 /* ------------------------------------------------------------------ */
 interface Service {
-  animation: string;
+  animation?: string;
+  image?: string;
   title: string;
   description: string;
 }
 
 const services: Service[] = [
   {
-    animation: LOTTIE_ANIMATIONS.socialMedia,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772949005/Website_setup-pana_kdmoks.svg",
     title: "Social Media Management",
     description:
       "End-to-end management of your Instagram, Facebook, LinkedIn, and X (Twitter) presence with daily content, engagement, and community building.",
   },
   {
-    animation: LOTTIE_ANIMATIONS.contentCreation,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948840/About_us_page-amico_x6pzpn.svg",
     title: "Content Creation",
     description:
       "Reels, carousels, stories, memes, and static posts — designed to resonate with your Indian audience and drive meaningful engagement.",
   },
   {
-    animation: LOTTIE_ANIMATIONS.performanceMarketing,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948723/Content_creator-amico_1_dkabfw.svg",
     title: "Performance Marketing",
     description:
       "Meta Ads, Google Ads, and campaign management optimised for ROAS. We turn ad spend into revenue with data-driven strategies.",
   },
   {
-    animation: LOTTIE_ANIMATIONS.brandIdentity,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948723/Videographer-pana_gladr0.svg",
     title: "Brand Identity & Design",
     description:
       "Logo design, brand guidelines, visual identity systems, and packaging design that makes your brand look like a ₹100 Cr company from day one.",
   },
   {
-    animation: LOTTIE_ANIMATIONS.videoProduction,
+    image:
+      "https://res.cloudinary.com/diiyy6bar/image/upload/v1772948722/Mobile_Marketing-pana_x02k3u.svg",
     title: "Video Production",
     description:
       "Product shoots, brand films, testimonial videos, and UGC-style content that builds trust and drives conversions across platforms.",
   },
   {
-    animation: LOTTIE_ANIMATIONS.websiteDesign,
+    animation: LOTTIE_ANIMATIONS.services,
     title: "Website & Funnel Design",
     description:
       "High-converting landing pages, sales funnels, and brand websites that don't just look good — they generate leads 24/7.",
@@ -68,12 +74,20 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
       <div className="flex items-center gap-6">
         {/* Animation */}
         <div className="shrink-0 w-20 h-20 bg-accent/10 rounded-2xl flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
-          <LottieAnimation
-            src={service.animation}
-            className="w-16 h-16"
-            loop
-            autoplay
-          />
+          {service.image ? (
+            <img
+              src={service.image}
+              alt={service.title}
+              className="w-16 h-16"
+            />
+          ) : (
+            <LottieAnimation
+              src={service.animation!}
+              className="w-16 h-16"
+              loop
+              autoplay
+            />
+          )}
         </div>
 
         {/* Content */}
