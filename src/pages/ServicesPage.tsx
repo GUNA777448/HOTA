@@ -1,6 +1,14 @@
-import { useNavigate } from "react-router-dom";
-import { CheckCircle } from "lucide-react";
-import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import { useMemo, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  ArrowRight,
+  CheckCircle,
+  Circle,
+  LayoutGrid,
+  Sparkles,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import HomeCTAButton from "@/components/ui/HomeCTAButton";
 import { ROUTES } from "@/routes";
 import LottieAnimation from "@/components/common/LottieAnimation";
 import { LOTTIE_ANIMATIONS } from "@/constants";
@@ -252,52 +260,201 @@ function ServiceBlock({
 
 export default function ServicesPage() {
   const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const activeService = useMemo(() => services[activeIndex], [activeIndex]);
+
   return (
     <>
-      {/* SEO removed */}
-      {/* SEO removed */}
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-bg-secondary">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center gap-12">
-          {/* Text */}
+      <section className="relative overflow-hidden bg-bg-secondary pb-20 pt-32">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(244,194,13,0.12),transparent_36%),radial-gradient(circle_at_bottom_right,rgba(244,194,13,0.06),transparent_28%)]" />
+
+        <div className="relative z-10 mx-auto flex max-w-7xl flex-col items-center gap-12 px-4 sm:px-6 lg:flex-row lg:px-8">
           <div className="flex-1 text-center lg:text-left">
-            <span className="text-xs font-bold uppercase tracking-widest text-accent">
+            <span className="text-xs font-bold uppercase tracking-[0.28em] text-accent">
               Our Services
             </span>
-            <h1 className="text-5xl sm:text-7xl font-black tracking-tight mt-4">
-              Everything You Need
+            <h1 className="mt-4 text-5xl font-black tracking-tight sm:text-7xl">
+              Systems Built
               <br />
-              <span className="text-accent">To Grow Online</span>
+              <span className="text-accent">To Grow With Clarity</span>
             </h1>
-            <p className="text-text-secondary text-lg mt-6 max-w-2xl">
-              From strategy to execution, we handle every aspect of your digital
-              presence so you can focus on what you do best — running your
-              business.
+            <p className="mt-6 max-w-2xl text-lg text-text-secondary">
+              Our motive is to remove random execution and replace it with a
+              repeatable growth system. Explore each service to see what it
+              includes and how it supports your brand trajectory.
             </p>
-            <div className="mt-8">
-              <InteractiveHoverButton
-                text="Get Your Free Audit"
+
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center lg:justify-start">
+              <HomeCTAButton
                 onClick={() => navigate(ROUTES.FREE_AUDIT)}
-                className="w-auto px-10 py-4 text-base font-bold"
-              />
+                className="w-full sm:w-auto font-bold"
+              >
+                Get Your Free Audit
+              </HomeCTAButton>
+              <Button
+                asChild
+                className="rounded-full border border-border bg-bg-card px-6 py-6 text-sm font-bold text-text-primary hover:bg-bg-card-hover"
+              >
+                <Link
+                  to={ROUTES.CONTACT}
+                  className="inline-flex items-center justify-center gap-2"
+                >
+                  Discuss your goals
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
             </div>
           </div>
 
-          {/* Hero Image */}
           <div className="flex-1 flex justify-center">
             <img
               src={cuateImg}
               alt="Digital marketing services illustration"
-              className="w-full max-w-lg drop-shadow-2xl"
+              className="w-full max-w-lg drop-shadow-[0_20px_80px_rgba(0,0,0,0.5)]"
             />
           </div>
         </div>
       </section>
 
-      {/* Detailed Services */}
-      <section className="py-24">
+      <section className="relative py-24">
+        <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-accent/45 to-transparent" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="space-y-32">
+          <div className="mb-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <span className="text-xs font-bold uppercase tracking-[0.26em] text-accent">
+                Capability Grid
+              </span>
+              <h2 className="mt-3 text-4xl font-black tracking-tight sm:text-5xl">
+                Pick a service, see the
+                <span className="text-accent"> full breakdown</span>
+              </h2>
+            </div>
+            <p className="max-w-lg text-sm text-text-secondary">
+              Modeled after 21st-style feature sections, this interactive layout
+              helps you compare offerings quickly before booking an audit call.
+            </p>
+          </div>
+
+          <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+            <div className="rounded-[2rem] border border-border bg-bg-card/70 p-4 sm:p-5">
+              <div className="space-y-3">
+                {services.map((service, index) => {
+                  const active = index === activeIndex;
+                  return (
+                    <button
+                      key={service.title}
+                      type="button"
+                      onClick={() => setActiveIndex(index)}
+                      className={`w-full rounded-2xl border p-4 text-left transition-all duration-300 ${
+                        active
+                          ? "border-accent/50 bg-accent/10"
+                          : "border-border bg-black/15 hover:border-accent/30 hover:bg-bg-card-hover"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <div
+                          className={`mt-0.5 ${
+                            active ? "text-accent" : "text-text-muted"
+                          }`}
+                        >
+                          {active ? (
+                            <CheckCircle size={18} />
+                          ) : (
+                            <Circle size={18} />
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-base font-bold text-text-primary">
+                            {service.title}
+                          </p>
+                          <p className="mt-1 text-xs uppercase tracking-[0.16em] text-text-muted">
+                            {service.tagline}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className="rounded-[2rem] border border-border bg-bg-card p-6 sm:p-8">
+              <div className="mb-6 flex items-center gap-3">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent/15 text-accent">
+                  <LayoutGrid size={20} />
+                </div>
+                <div>
+                  <p className="text-sm uppercase tracking-[0.2em] text-text-muted">
+                    Selected service
+                  </p>
+                  <h3 className="text-2xl font-black text-text-primary">
+                    {activeService.title}
+                  </h3>
+                </div>
+              </div>
+
+              <p className="text-base leading-relaxed text-text-secondary">
+                {activeService.description}
+              </p>
+
+              <div className="mt-7 grid gap-4 sm:grid-cols-2">
+                <div className="rounded-2xl border border-border bg-black/20 p-5">
+                  <p className="text-sm font-bold uppercase tracking-[0.14em] text-accent">
+                    Includes
+                  </p>
+                  <ul className="mt-4 space-y-3">
+                    {activeService.features.slice(0, 4).map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2 text-sm"
+                      >
+                        <CheckCircle
+                          size={16}
+                          className="mt-0.5 shrink-0 text-accent"
+                        />
+                        <span className="text-text-secondary">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                <div className="rounded-2xl border border-border bg-black/20 p-5">
+                  <p className="text-sm font-bold uppercase tracking-[0.14em] text-accent">
+                    Deliverables
+                  </p>
+                  <ul className="mt-4 space-y-3">
+                    {activeService.deliverables.map((item) => (
+                      <li key={item} className="flex items-start gap-2 text-sm">
+                        <Sparkles
+                          size={15}
+                          className="mt-0.5 shrink-0 text-accent"
+                        />
+                        <span className="text-text-secondary">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-7">
+                <Button
+                  asChild
+                  className="rounded-full bg-accent px-6 py-6 text-sm font-bold text-black hover:bg-accent-hover"
+                >
+                  <Link
+                    to={ROUTES.FREE_AUDIT}
+                    className="inline-flex items-center gap-2"
+                  >
+                    Start with an audit
+                    <ArrowRight size={16} />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-24 space-y-32">
             {services.map((service, index) => (
               <ServiceBlock
                 key={service.title}
@@ -309,27 +466,34 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-bg-secondary">
+      <section className="relative overflow-hidden bg-bg-secondary py-24">
+        <div className="absolute inset-0">
+          <div className="absolute left-1/2 top-1/2 h-120 w-120 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/5 blur-3xl" />
+        </div>
+
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-6">
-            Ready to Scale Your Brand?
+          <h2 className="text-4xl sm:text-5xl font-black tracking-tight mb-6 relative z-10">
+            Ready to Build Your Growth System?
           </h2>
-          <p className="text-text-secondary text-lg mb-8">
-            Let's talk about which services are right for your business goals
-            and budget.
+          <p className="text-text-secondary text-lg mb-8 relative z-10">
+            Tell us your stage, goals, and constraints. We will recommend the
+            right service stack for momentum without wasted execution.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <InteractiveHoverButton
-              text="Get Your Free Audit"
+
+          <div className="relative z-10 flex flex-col sm:flex-row gap-6 justify-center">
+            <HomeCTAButton
               onClick={() => navigate(ROUTES.FREE_AUDIT)}
-              className="w-auto px-10 py-4 text-base font-bold"
-            />
-            <InteractiveHoverButton
-              text="Let's Talk"
+              className="w-full sm:w-auto font-bold"
+            >
+              Get Your Free Audit
+            </HomeCTAButton>
+            <HomeCTAButton
               onClick={() => navigate(ROUTES.CONTACT)}
-              className="w-auto px-10 py-4 text-base font-medium border-border"
-            />
+              className="w-full sm:w-auto"
+              variant="secondary"
+            >
+              Let&apos;s Talk
+            </HomeCTAButton>
           </div>
         </div>
       </section>

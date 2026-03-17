@@ -15,6 +15,10 @@ import { toast } from "sonner";
 import { useSEO } from "../components/common/SEO";
 import { contact, socialLinks, LOTTIE_ANIMATIONS } from "../constants";
 import LottieAnimation from "../components/common/LottieAnimation";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwaJLwpyoWSCeh5NklVgjTAR7jPvOlwZYbCWMxkYU9k_KWIpuVjaKyFixzFR8h9FNbF/exec";
@@ -126,37 +130,59 @@ export default function ContactPage() {
   });
   return (
     <>
-      {/* Hero */}
-      <section className="py-24 bg-bg-secondary">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-xs font-bold uppercase tracking-widest text-accent">
-            Let's Talk
-          </span>
-          <h1 className="text-5xl sm:text-6xl font-black tracking-tight mt-4 mb-6">
-            Ready to Grow?
-            <span className="text-accent"> Let's Connect.</span>
-          </h1>
-          <p className="text-text-secondary text-lg max-w-2xl mx-auto">
-            Drop us a message, slide into our DMs, or just WhatsApp us. We
-            respond faster than your current agency delivers creatives.
-          </p>
-          <LottieAnimation
-            src={LOTTIE_ANIMATIONS.contact}
-            className="w-52 h-52 mx-auto mt-8"
-          />
+      <section className="relative overflow-hidden bg-bg-secondary py-24">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(244,194,13,0.14),transparent_40%)]" />
+
+        <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-10 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+          <div>
+            <span className="text-xs font-bold uppercase tracking-[0.28em] text-accent">
+              Let&apos;s Talk
+            </span>
+            <h1 className="mt-4 text-5xl font-black tracking-tight sm:text-6xl">
+              Bring us your goal,
+              <span className="text-accent"> we&apos;ll shape the plan.</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg text-text-secondary">
+              Our motive is to make growth decisions simpler for you. Share what
+              you&apos;re building and we&apos;ll suggest the right next move for brand,
+              content, and performance.
+            </p>
+            <div className="mt-8 grid max-w-xl gap-3 sm:grid-cols-3">
+              {[
+                "Fast response",
+                "Founder-level clarity",
+                "Execution-first advice",
+              ].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-xl border border-border bg-bg-card/70 px-3 py-2 text-xs uppercase tracking-[0.16em] text-text-muted"
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[2rem] border border-border bg-bg-card/60 p-8">
+            <LottieAnimation
+              src={LOTTIE_ANIMATIONS.contact}
+              className="h-56 w-full"
+            />
+            <p className="mt-4 text-center text-sm text-text-secondary">
+              Share your challenge. We&apos;ll respond with actionable next steps
+              within 24 hours.
+            </p>
+          </div>
         </div>
       </section>
 
-      {/* Contact Grid */}
       <section className="py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 xl:grid-cols-5 gap-12">
-            {/* Contact Form */}
             <div className="lg:col-span-1 xl:col-span-3">
               <div className="flex flex-col lg:flex-row gap-8 items-start">
-                {/* Form */}
                 <div className="flex-1 w-full">
-                  <h2 className="text-2xl font-black mb-8">
+                  <h2 className="mb-8 text-2xl font-black">
                     Send Us a Message
                   </h2>
 
@@ -176,32 +202,32 @@ export default function ContactPage() {
                   <form onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-2">
+                        <Label className="mb-2 block text-text-secondary">
                           Your Name *
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                           type="text"
                           required
                           value={formData.name}
                           onChange={(e) =>
                             setFormData({ ...formData, name: e.target.value })
                           }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                          className="h-12 rounded-xl border-border bg-bg-card"
                           placeholder="Rajesh Kumar"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-2">
+                        <Label className="mb-2 block text-text-secondary">
                           Email Address *
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                           type="email"
                           required
                           value={formData.email}
                           onChange={(e) =>
                             setFormData({ ...formData, email: e.target.value })
                           }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                          className="h-12 rounded-xl border-border bg-bg-card"
                           placeholder="rajesh@company.com"
                         />
                       </div>
@@ -209,33 +235,32 @@ export default function ContactPage() {
 
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-2">
+                        <Label className="mb-2 block text-text-secondary">
                           Phone Number *
-                        </label>
+                        </Label>
                         <div className="flex items-center">
                           <span className="inline-flex items-center px-3 py-3 rounded-l-xl bg-bg-card border border-r-0 border-border text-text-muted select-none">
                             +91
                           </span>
-                          <input
+                          <Input
                             type="tel"
                             required
                             maxLength={10}
                             value={formData.phone}
                             onChange={(e) => {
-                              // Only allow digits
                               const val = e.target.value.replace(/[^0-9]/g, "");
                               setFormData({ ...formData, phone: val });
                             }}
-                            className="w-full px-4 py-3 rounded-r-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                            className="h-12 rounded-r-xl rounded-l-none border-border bg-bg-card"
                             placeholder="9876543210"
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-2">
+                        <Label className="mb-2 block text-text-secondary">
                           Company / Brand Name
-                        </label>
-                        <input
+                        </Label>
+                        <Input
                           type="text"
                           value={formData.company}
                           onChange={(e) =>
@@ -244,7 +269,7 @@ export default function ContactPage() {
                               company: e.target.value,
                             })
                           }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                          className="h-12 rounded-xl border-border bg-bg-card"
                           placeholder="Your Brand Name"
                         />
                       </div>
@@ -252,9 +277,9 @@ export default function ContactPage() {
 
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-2">
+                        <Label className="mb-2 block text-text-secondary">
                           Service Interested In
-                        </label>
+                        </Label>
                         <select
                           value={formData.service}
                           onChange={(e) =>
@@ -280,9 +305,9 @@ export default function ContactPage() {
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-text-secondary mb-2">
+                        <Label className="mb-2 block text-text-secondary">
                           Monthly Budget Range
-                        </label>
+                        </Label>
                         <select
                           value={formData.budget}
                           onChange={(e) =>
@@ -300,24 +325,24 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-text-secondary mb-2">
+                      <Label className="mb-2 block text-text-secondary">
                         Tell Us About Your Project
-                      </label>
-                      <textarea
+                      </Label>
+                      <Textarea
                         rows={4}
                         value={formData.message}
                         onChange={(e) =>
                           setFormData({ ...formData, message: e.target.value })
                         }
-                        className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300 resize-none"
+                        className="rounded-xl border-border bg-bg-card"
                         placeholder="Tell us about your brand, goals, and what you're looking for..."
                       />
                     </div>
 
-                    <button
+                    <Button
                       type="submit"
                       disabled={isLoading}
-                      className="group bg-accent hover:bg-accent-hover text-black font-bold px-8 py-4 rounded-full transition-all duration-300 hover:scale-105 flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100"
+                      className="group h-12 rounded-full bg-accent px-8 text-base font-bold text-black hover:bg-accent-hover"
                     >
                       {isLoading ? (
                         <>
@@ -330,11 +355,10 @@ export default function ContactPage() {
                           Send Message
                         </>
                       )}
-                    </button>
+                    </Button>
                   </form>
                 </div>
 
-                {/* Decorative Icon */}
                 <div className="hidden lg:flex items-center justify-center lg:w-80">
                   <div className="w-48 h-48 bg-accent/10 rounded-3xl flex items-center justify-center">
                     <Headset size={80} className="text-accent" />
@@ -343,7 +367,6 @@ export default function ContactPage() {
               </div>
             </div>
 
-            {/* Contact Info Sidebar */}
             <div className="lg:col-span-1 xl:col-span-2 space-y-8">
               <div>
                 <h2 className="text-2xl font-black mb-8">Get in Touch</h2>

@@ -1,65 +1,94 @@
 import { useNavigate } from "react-router-dom";
-import { Sparkles } from "lucide-react";
-import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
-import LottieAnimation from "../common/LottieAnimation";
-import { LOTTIE_ANIMATIONS } from "../../constants";
+import HomeCTAButton from "./HomeCTAButton";
+
+const heroStats = [
+  {
+    emoji: "🎯",
+    label: "POSITIONING-FIRST BRAND STRATEGY",
+    value: "CORE",
+  },
+  {
+    emoji: "⚡",
+    label: "CONTENT THAT EARNS ATTENTION",
+    value: "CRAFT",
+  },
+  {
+    emoji: "📈",
+    label: "FULL-FUNNEL GROWTH SYSTEMS",
+    value: "SCALE",
+  },
+];
+
+function StatsMarquee() {
+  const marqueeItems = [...heroStats, ...heroStats];
+
+  return (
+    <div className="hero-marquee rounded-full border border-white/10 bg-black/35 px-4 py-3 backdrop-blur-md">
+      <div className="hero-marquee-track">
+        {marqueeItems.map((stat, index) => (
+          <div
+            key={`${stat.label}-${index}`}
+            className="flex items-center gap-3 whitespace-nowrap"
+          >
+            <span className="font-heading text-sm font-black tracking-[0.3em] text-accent">
+              {stat.value}
+            </span>
+            <span className="text-xs font-semibold uppercase tracking-[0.22em] text-white/70 sm:text-sm">
+              {stat.label}
+            </span>
+            <span className="text-sm sm:text-base">{stat.emoji}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export default function HeroSection() {
   const navigate = useNavigate();
+
   return (
-    <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-bg-primary via-bg-secondary to-bg-primary" />
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-accent/10 rounded-full blur-3xl" />
+    <section className="relative -mt-20 flex min-h-[calc(100vh+5rem)] w-full flex-col justify-start overflow-hidden bg-bg-primary md:justify-between">
+      <div
+        className="absolute inset-0 bg-cover bg-center opacity-30"
+        style={{
+          backgroundImage:
+            "url(https://www.taboola.com/wp-content/uploads-neo/2025/01/performance_marketing-scaled.jpg)",
+        }}
+      />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(244,194,13,0.16),transparent_32%),radial-gradient(circle_at_75%_20%,rgba(244,194,13,0.08),transparent_25%),linear-gradient(180deg,rgba(0,0,0,0.2),rgba(0,0,0,0.72)_48%,rgba(0,0,0,0.96)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-size-[40px_40px] opacity-40" />
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left: Content */}
-          <div className="text-center lg:text-left">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-accent/10 border border-accent/20 rounded-full px-4 py-2 mb-8 animate-fade-in">
-              <Sparkles size={16} className="text-accent" />
-              <span className="text-xs font-semibold uppercase tracking-wider text-accent">
-                India's Creative Growth Agency
-              </span>
-            </div>
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pt-22 sm:px-6 md:pt-20 lg:px-8 lg:pt-24">
+        <div className="max-w-4xl space-y-5 animate-fade-in-up">
+          <StatsMarquee />
+        </div>
+      </div>
 
-            {/* Headline */}
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-[0.9] tracking-tighter mb-6 animate-fade-in-up">
-              We Don't Post.
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 pb-12 pt-5 sm:px-6 sm:pb-24 md:pt-10 lg:px-8 lg:pb-28">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:gap-14">
+          <div className="w-full space-y-5 lg:w-3/5">
+            <h1 className="max-w-4xl font-heading text-4xl font-black leading-[0.94] tracking-tight text-white sm:text-5xl md:text-6xl lg:text-7xl xl:text-[5.5rem] animate-fade-in-up animation-delay-200">
+              We <span className="text-accent">think</span>, you grow.
               <br />
-              <span className="text-accent">We Position.</span>
+              <span className="text-white/92">
+                We position brands people remember.
+              </span>
             </h1>
-
-            {/* Subheadline */}
-            <p className="text-lg sm:text-xl text-text-secondary max-w-2xl lg:mx-0 mx-auto mb-10 animate-fade-in-up animation-delay-200">
-              Content Creation + Full Digital Growth + Brand Positioning. Built
-              for startups, e-commerce brands, and businesses ready to scale
-              from ₹50K to ₹3L+ monthly.
-            </p>
-    
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center lg:justify-start justify-center gap-6 animate-fade-in-up animation-delay-400">
-              <InteractiveHoverButton
-                text="Get Your Free Brand Audit"
-                onClick={() => navigate("/free-audit")}
-                className="w-auto px-10 py-4 text-base font-bold"
-              />
-              <InteractiveHoverButton
-                text="View Packages"
-                onClick={() => navigate("/packages")}
-                className="w-auto px-10 py-4 text-base font-medium border-border"
-              />
-            </div>
+            <HomeCTAButton
+              onClick={() => navigate("/free-audit")}
+              className="w-full sm:w-auto font-bold animate-fade-in-up animation-delay-400"
+            >
+              Get Your Free Brand Audit
+            </HomeCTAButton>
           </div>
 
-          {/* Right: Lottie Animation */}
-          <div className="hidden lg:flex items-center justify-center animate-fade-in-up animation-delay-800">
-            <LottieAnimation
-              src={LOTTIE_ANIMATIONS.hero}
-              className="w-full h-full max-w-md max-h-md"
-            />
+          <div className="w-full lg:w-2/5 animate-fade-in-up animation-delay-600">
+            <p className="border-l border-accent/30 pl-5 text-base italic leading-relaxed text-text-secondary sm:text-lg lg:text-right lg:border-l-0 lg:border-r lg:pr-5 lg:pl-0 xl:text-2xl">
+              Hota turns content creation, digital growth, and brand positioning
+              into one clear system so ambitious businesses can stop chasing
+              reach and start owning attention.
+            </p>
           </div>
         </div>
       </div>

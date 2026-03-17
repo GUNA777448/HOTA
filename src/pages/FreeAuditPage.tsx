@@ -1,4 +1,5 @@
 import { useState, type FormEvent, type ChangeEvent, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
   BarChart3,
   Globe,
@@ -15,6 +16,10 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useSEO } from "../components/common/SEO";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const AUDIT_APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwnlKBfblE-gXXulkmIrmmdYT2eqjAJMdWjamtlxP7QLMtZ-NJcRPyxDgHF40h4SfmW/exec";
@@ -211,13 +216,15 @@ export default function FreeAuditPage() {
             Check your email ({formData.email || "your inbox"}) and WhatsApp for
             updates.
           </p>
-          <a
-            href="/"
-            className="inline-flex items-center gap-2 bg-accent hover:bg-accent-hover text-black font-bold px-6 py-3 rounded-full transition-all duration-300 hover:scale-105"
+          <Button
+            asChild
+            className="rounded-full bg-accent px-6 py-6 text-sm font-bold text-black hover:bg-accent-hover"
           >
-            Back to Home
-            <ArrowRight size={16} />
-          </a>
+            <Link to="/" className="inline-flex items-center gap-2">
+              Back to Home
+              <ArrowRight size={16} />
+            </Link>
+          </Button>
         </div>
       </section>
     );
@@ -233,7 +240,6 @@ export default function FreeAuditPage() {
   });
   return (
     <>
-      {/* Hero */}
       <section className="py-24 bg-bg-secondary relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_30%,rgba(249,115,22,0.1),transparent_60%)]" />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -248,9 +254,9 @@ export default function FreeAuditPage() {
                 <span className="text-accent"> Brand Growth Audit</span>
               </h1>
               <p className="text-text-secondary text-lg max-w-2xl lg:mx-0 mx-auto mb-12">
-                Tell us about your brand and we'll deliver a personalised audit
-                report with actionable insights to 10x your digital presence —
-                all for free.
+                Our motive is to give you clarity before you spend more on
+                random marketing. Share your brand context and we will send a
+                focused growth roadmap you can act on immediately.
               </p>
 
               {/* How it works */}
@@ -287,11 +293,12 @@ export default function FreeAuditPage() {
         </div>
       </section>
 
-      {/* Form */}
       <section className="py-24">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <form onSubmit={handleSubmit} className="space-y-10">
-            {/* Personal Info */}
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-10 rounded-[2rem] border border-border bg-bg-card/65 p-6 sm:p-8"
+          >
             <div>
               <h2 className="text-xl font-black mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 bg-accent text-black text-sm font-black rounded-lg flex items-center justify-center">
@@ -301,25 +308,25 @@ export default function FreeAuditPage() {
               </h2>
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                  <Label className="mb-2 block text-text-secondary">
                     Your Name *
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="text"
                     required
                     value={formData.name}
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                    className="h-12 rounded-xl border-border bg-black/20"
                     placeholder="Priya Sharma"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                  <Label className="mb-2 block text-text-secondary">
                     Business / Brand Name *
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="text"
                     required
                     value={formData.businessName}
@@ -329,14 +336,13 @@ export default function FreeAuditPage() {
                         businessName: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                    className="h-12 rounded-xl border-border bg-black/20"
                     placeholder="Your Brand Name"
                   />
                 </div>
               </div>
             </div>
 
-            {/* Business Info */}
             <div>
               <h2 className="text-xl font-black mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 bg-accent text-black text-sm font-black rounded-lg flex items-center justify-center">
@@ -346,9 +352,9 @@ export default function FreeAuditPage() {
               </h2>
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                  <Label className="mb-2 block text-text-secondary">
                     Industry *
-                  </label>
+                  </Label>
                   <select
                     required
                     value={formData.industry}
@@ -366,9 +372,9 @@ export default function FreeAuditPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                  <Label className="mb-2 block text-text-secondary">
                     Monthly Revenue Range
-                  </label>
+                  </Label>
                   <select
                     value={formData.revenueRange}
                     onChange={(e) =>
@@ -390,7 +396,6 @@ export default function FreeAuditPage() {
               </div>
             </div>
 
-            {/* Online Presence */}
             <div>
               <h2 className="text-xl font-black mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 bg-accent text-black text-sm font-black rounded-lg flex items-center justify-center">
@@ -400,59 +405,59 @@ export default function FreeAuditPage() {
               </h2>
               <div className="space-y-4">
                 <div>
-                  <label className="text-sm font-medium text-text-secondary mb-2 flex items-center gap-2">
+                  <Label className="mb-2 flex items-center gap-2 text-text-secondary">
                     <Globe size={14} /> Website URL
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     type="url"
                     value={formData.website}
                     onChange={(e) =>
                       setFormData({ ...formData, website: e.target.value })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                    className="h-12 rounded-xl border-border bg-black/20"
                     placeholder="https://yourbrand.com"
                   />
                 </div>
                 <div className="grid sm:grid-cols-3 gap-4">
                   <div>
-                    <label className="text-sm font-medium text-text-secondary mb-2 flex items-center gap-2">
+                    <Label className="mb-2 flex items-center gap-2 text-text-secondary">
                       <Instagram size={14} /> Instagram
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="text"
                       value={formData.instagram}
                       onChange={(e) =>
                         setFormData({ ...formData, instagram: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                      className="h-12 rounded-xl border-border bg-black/20"
                       placeholder="@yourbrand"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-text-secondary mb-2 flex items-center gap-2">
+                    <Label className="mb-2 flex items-center gap-2 text-text-secondary">
                       Facebook
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="text"
                       value={formData.facebook}
                       onChange={(e) =>
                         setFormData({ ...formData, facebook: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                      className="h-12 rounded-xl border-border bg-black/20"
                       placeholder="facebook.com/yourbrand"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-text-secondary mb-2 flex items-center gap-2">
+                    <Label className="mb-2 flex items-center gap-2 text-text-secondary">
                       LinkedIn
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="text"
                       value={formData.linkedin}
                       onChange={(e) =>
                         setFormData({ ...formData, linkedin: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                      className="h-12 rounded-xl border-border bg-black/20"
                       placeholder="linkedin.com/company/yourbrand"
                     />
                   </div>
@@ -460,7 +465,6 @@ export default function FreeAuditPage() {
               </div>
             </div>
 
-            {/* Contact + Challenge */}
             <div>
               <h2 className="text-xl font-black mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 bg-accent text-black text-sm font-black rounded-lg flex items-center justify-center">
@@ -471,41 +475,41 @@ export default function FreeAuditPage() {
               <div className="space-y-4">
                 <div className="grid sm:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                    <Label className="mb-2 block text-text-secondary">
                       Email Address *
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="email"
                       required
                       value={formData.email}
                       onChange={(e) =>
                         setFormData({ ...formData, email: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                      className="h-12 rounded-xl border-border bg-black/20"
                       placeholder="priya@yourbrand.com"
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-text-secondary mb-2">
+                    <Label className="mb-2 block text-text-secondary">
                       WhatsApp Number *
-                    </label>
-                    <input
+                    </Label>
+                    <Input
                       type="tel"
                       required
                       value={formData.phone}
                       onChange={(e) =>
                         setFormData({ ...formData, phone: e.target.value })
                       }
-                      className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300"
+                      className="h-12 rounded-xl border-border bg-black/20"
                       placeholder="+91 98765 43210"
                     />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-text-secondary mb-2">
+                  <Label className="mb-2 block text-text-secondary">
                     What's your biggest marketing challenge right now?
-                  </label>
-                  <textarea
+                  </Label>
+                  <Textarea
                     rows={3}
                     value={formData.biggestChallenge}
                     onChange={(e) =>
@@ -514,14 +518,13 @@ export default function FreeAuditPage() {
                         biggestChallenge: e.target.value,
                       })
                     }
-                    className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary placeholder:text-text-muted transition-colors duration-300 resize-none"
+                    className="rounded-xl border-border bg-black/20"
                     placeholder="e.g., Low engagement on Instagram, not generating leads from social media, need a rebrand..."
                   />
                 </div>
               </div>
             </div>
 
-            {/* File Upload Section */}
             <div>
               <h2 className="text-xl font-black mb-6 flex items-center gap-2">
                 <span className="w-8 h-8 bg-accent text-black text-sm font-black rounded-lg flex items-center justify-center">
@@ -622,12 +625,11 @@ export default function FreeAuditPage() {
               </div>
             )}
 
-            {/* Submit */}
             <div className="pt-4">
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="group bg-accent hover:bg-accent-hover text-black font-black px-10 py-4 rounded-full text-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 disabled:opacity-60 disabled:hover:scale-100"
+                className="group h-13 rounded-full bg-accent px-10 text-lg font-black text-black hover:bg-accent-hover"
               >
                 {isLoading ? (
                   <>
@@ -643,7 +645,7 @@ export default function FreeAuditPage() {
                     />
                   </>
                 )}
-              </button>
+              </Button>
               <p className="text-xs text-text-muted mt-4">
                 Your information is 100% secure. We'll never share your data
                 with anyone. Expect your audit report within 48 hours via email

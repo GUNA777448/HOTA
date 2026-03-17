@@ -1,76 +1,129 @@
-import { Target, Zap, TrendingUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Target, TrendingUp, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import LottieAnimation from "../common/LottieAnimation";
 import { LOTTIE_ANIMATIONS } from "../../constants";
 
+const aboutPoints = [
+  {
+    icon: Target,
+    title: "Positioning before posting",
+    description:
+      "We define how your brand should be perceived before a single campaign goes live.",
+  },
+  {
+    icon: Zap,
+    title: "Creative systems that scale",
+    description:
+      "From content pipelines to ad creative, we build repeatable systems, not random bursts.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Growth tied to business goals",
+    description:
+      "Reach matters only when it converts into leads, sales, and category authority.",
+  },
+];
+
+const aboutStats = [
+  { label: "Working model", value: "Founder-led" },
+  { label: "Approach", value: "Research-first" },
+  { label: "Core focus", value: "Content + Ads" },
+];
+
 export default function AboutSection() {
   return (
-    <section className="py-24 bg-bg-secondary">
+    <section className="relative overflow-hidden bg-bg-secondary py-24">
+      <div className="absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-accent/60 to-transparent" />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left: Content + Animation */}
-          <div>
-            <LottieAnimation
-              src={LOTTIE_ANIMATIONS.about}
-              className="w-64 h-64 mx-auto lg:mx-0 mb-8"
-            />
-            <span className="text-xs font-bold uppercase tracking-widest text-accent">
+        <div className="grid items-start gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
+          <div className="rounded-[2rem] border border-border bg-bg-card/70 p-8 shadow-[0_30px_80px_rgba(0,0,0,0.28)] backdrop-blur-sm sm:p-10">
+            <span className="text-xs font-bold uppercase tracking-[0.28em] text-accent">
               About Hota
             </span>
-            <h2 className="text-4xl sm:text-5xl font-black tracking-tight mt-4 mb-6">
-              Your Brand Deserves
+            <h2 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
+              Your brand deserves a
               <br />
-              <span className="text-accent">More Than Just Posts</span>
+              <span className="text-accent">clear growth narrative</span>
             </h2>
-            <p className="text-text-secondary text-lg leading-relaxed mb-8">
-              Hota is not your typical social media agency. We're a creative
-              growth partner that builds brand empires. From scroll-stopping
-              content to full-funnel digital strategies, we help Indian
-              businesses go from overlooked to overbooked.
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-text-secondary">
+              Hota is built for founders and marketing teams that need sharper
+              positioning, stronger creative, and a growth system that feels
+              intentional from top to bottom.
             </p>
-            <p className="text-text-secondary leading-relaxed">
-              Whether you're a startup in Bangalore, a D2C brand in Mumbai, or a
-              local business in Tier-2 India ready to scale — we position your
-              brand where your audience can't ignore it.
+            <p className="mt-4 max-w-2xl leading-relaxed text-text-secondary">
+              We combine content strategy, paid growth, and brand design into a
+              single operating layer so ambitious Indian businesses can stop
+              blending in and start becoming the brand people remember first.
             </p>
-          </div>
 
-          {/* Right: Features */}
-          <div className="space-y-6">
-            {[
-              {
-                icon: Target,
-                title: "Strategic Positioning",
-                description:
-                  "We don't follow trends blindly. We analyse your market, competition, and audience to build a positioning strategy that makes your brand the obvious choice.",
-              },
-              {
-                icon: Zap,
-                title: "Scroll-Stopping Content",
-                description:
-                  "From reels that go viral to carousels that convert — our content is designed to stop the scroll and start conversations that drive revenue.",
-              },
-              {
-                icon: TrendingUp,
-                title: "Growth-Driven Results",
-                description:
-                  "We measure success in leads, revenue, and brand equity — not just likes and followers. Every campaign is optimised for real business growth.",
-              },
-            ].map((feature) => (
-              <div
-                key={feature.title}
-                className="flex gap-4 p-6 rounded-2xl bg-bg-card border border-border hover:border-accent/30 transition-all duration-300 group"
-              >
-                <div className="flex-shrink-0 w-12 h-12 bg-accent/10 rounded-xl flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
-                  <feature.icon size={24} className="text-accent" />
-                </div>
-                <div>
-                  <h3 className="font-bold text-lg mb-1">{feature.title}</h3>
-                  <p className="text-text-secondary text-sm leading-relaxed">
-                    {feature.description}
+            <div className="mt-8 grid gap-4 sm:grid-cols-3">
+              {aboutStats.map((stat) => (
+                <div
+                  key={stat.label}
+                  className="rounded-2xl border border-border bg-black/20 p-4"
+                >
+                  <p className="text-2xl font-black text-accent">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.18em] text-text-muted">
+                    {stat.label}
                   </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            <div className="mt-8">
+              <Button
+                asChild
+                className="rounded-full bg-accent px-6 py-6 text-sm font-bold text-black hover:bg-accent-hover"
+              >
+                <Link to="/services" className="inline-flex items-center gap-2">
+                  Explore services
+                  <ArrowRight size={16} />
+                </Link>
+              </Button>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="rounded-[2rem] border border-border bg-bg-card/60 p-8">
+              <LottieAnimation
+                src={LOTTIE_ANIMATIONS.about}
+                className="mb-6 h-52 w-full"
+              />
+              <p className="text-sm uppercase tracking-[0.24em] text-text-muted">
+                Operating principle
+              </p>
+              <p className="mt-3 text-xl font-semibold leading-relaxed text-text-primary">
+                Strategy, design, and distribution should feel like one motion,
+                not three disconnected teams.
+              </p>
+            </div>
+
+            <div className="grid gap-4">
+              {aboutPoints.map((point) => (
+                <div
+                  key={point.title}
+                  className="group rounded-[1.75rem] border border-border bg-bg-card p-6 transition-all duration-300 hover:border-accent/30 hover:bg-bg-card-hover"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex shrink-0 items-center justify-center rounded-2xl bg-accent/10 text-accent transition-colors duration-300 group-hover:bg-accent/20 h-12 w-12">
+                      <point.icon size={22} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-text-primary">
+                        {point.title}
+                      </h3>
+                      <p className="mt-2 text-sm leading-relaxed text-text-secondary">
+                        {point.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

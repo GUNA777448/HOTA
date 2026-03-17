@@ -1,15 +1,22 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
-import logo from "@/assets/HOTA-BANNER.png";
+import {
+  BriefcaseBusiness,
+  FileText,
+  Home,
+  Menu,
+  Phone,
+  X,
+} from "lucide-react";
+import { NavBar as TubeLightNavBar } from "@/components/ui/tube-light-navbar";
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "Services", path: "/services" },
+  { name: "Home", path: "/", icon: Home },
+  { name: "Services", path: "/services", icon: BriefcaseBusiness },
   // { name: "Packages", path: "/packages" },
-  { name: "Portfolio", path: "/portfolio" },
-  { name: "Blog", path: "/blog" },
-  { name: "Contact", path: "/contact" },
+  { name: "Portfolio", path: "/portfolio", icon: BriefcaseBusiness },
+  { name: "Blog", path: "/blog", icon: FileText },
+  { name: "Contact", path: "/contact", icon: Phone },
 ];
 
 export default function Navbar() {
@@ -23,38 +30,19 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <img
-              src={logo}
-              alt="HOTA Creative Growth Agency"
-              className="h-14 w-auto object-contain"
+              src="https://res.cloudinary.com/diiyy6bar/image/upload/v1773761925/WhatsApp_Image_2026-03-17_at_9.07.36_PM_nvnnx1.jpg"
+              alt=""
+              className="h-15 w-50 rounded-full md:h-10"
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={`text-sm font-medium uppercase tracking-wider transition-colors duration-300 hover:text-accent ${
-                  link.path === "/"
-                    ? location.pathname === "/"
-                      ? "text-accent"
-                      : "text-text-secondary"
-                    : location.pathname.startsWith(link.path)
-                      ? "text-accent"
-                      : "text-text-secondary"
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            <Link
-              to="/free-audit"
-              className="bg-accent hover:bg-accent-hover text-black font-bold text-sm px-6 py-2.5 rounded-full transition-all duration-300 hover:scale-105"
-            >
-              Free Audit
-            </Link>
-          </div>
+          <TubeLightNavBar
+            items={navLinks.map((link) => ({
+              name: link.name,
+              url: link.path,
+              icon: link.icon,
+            }))}
+          />
 
           {/* Mobile Menu Toggle */}
           <button

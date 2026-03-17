@@ -148,6 +148,15 @@
   }
 }
 
+@keyframes hero-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(calc(-50% - 1rem));
+  }
+}
+
 /* Custom Cursor */
 .custom-cursor {
   position: fixed;
@@ -213,6 +222,28 @@
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+.hero-marquee {
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 8%,
+    black 92%,
+    transparent
+  );
+}
+
+.hero-marquee-track {
+  display: flex;
+  width: max-content;
+  gap: 2rem;
+  animation: hero-marquee 28s linear infinite;
+}
+
+.hero-marquee:hover .hero-marquee-track {
+  animation-play-state: paused;
 }
 
 .animation-delay-200 {
