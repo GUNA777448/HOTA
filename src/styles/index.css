@@ -170,42 +170,34 @@
     width 0.2s ease,
     height 0.2s ease,
     border-width 0.2s ease;
+  transform: translate(-100px, -100px);
+  will-change: transform;
   mix-blend-mode: difference;
 }
 
-.custom-cursor-dot {
-  position: fixed;
-  width: 6px;
-  height: 6px;
-  background-color: var(--color-accent);
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 10000;
-  transition: transform 0.1s ease;
-}
-
 .custom-cursor.hover {
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
   border-width: 3px;
-  background-color: rgba(249, 115, 22, 0.1);
+  background-color: rgba(244, 194, 13, 0.1);
 }
 
-.custom-cursor-dot.hover {
-  transform: scale(0);
+@media (hover: hover) and (pointer: fine) {
+  .custom-cursor-enabled,
+  .custom-cursor-enabled a,
+  .custom-cursor-enabled button,
+  .custom-cursor-enabled input,
+  .custom-cursor-enabled textarea,
+  .custom-cursor-enabled select,
+  .custom-cursor-enabled [role="button"] {
+    cursor: none !important;
+  }
 }
 
-/* Sparkles */
-.sparkle {
-  position: fixed;
-  pointer-events: none;
-  z-index: 9998;
-  animation: sparkle 0.8s ease-out forwards;
-}
-
-.sparkle::before {
-  content: "✨";
-  font-size: 16px;
+@media (hover: none), (pointer: coarse) {
+  .custom-cursor {
+    display: none;
+  }
 }
 
 .animate-fade-in-up {

@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { ROUTES } from "@/routes";
 import { auth } from "@/services/firebase";
+import { Button } from "@/components/base/button";
 import {
   createBlogAuthorFromAdmin,
   createBlogCategoryFromAdmin,
@@ -630,44 +631,62 @@ export default function AdminBlogsPage() {
   }
 
   return (
-    <section className="min-h-screen bg-bg-primary text-text-primary px-4 py-24 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-8">
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-text-muted">
-              Admin Dashboard
-            </p>
-            <h1 className="text-3xl font-black">Blog CMS Operations</h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <Link
-              to={ROUTES.BLOG}
-              className="text-sm text-accent hover:underline"
-            >
-              View blog
-            </Link>
-            <Link
-              to={ROUTES.ADMIN_PROFILE}
-              className="text-sm text-accent hover:underline"
-            >
-              Profile
-            </Link>
-            <button
-              onClick={handleLogout}
-              className="rounded-xl border border-border px-4 py-2 text-sm hover:border-accent"
-            >
-              Logout
-            </button>
+    <main className="min-h-screen bg-bg-primary text-text-primary px-4 py-16 sm:px-6 lg:px-8">
+      <a
+        href="#admin-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-black focus:px-3 focus:py-2 focus:text-white"
+      >
+        Skip to admin content
+      </a>
+      <section
+        id="admin-content"
+        className="mx-auto max-w-7xl space-y-8"
+        aria-labelledby="admin-cms-heading"
+      >
+        <div className="rounded-2xl border border-border/70 bg-bg-secondary/80 p-5 shadow-lg backdrop-blur-sm sm:p-6">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-text-muted">
+                Admin Dashboard
+              </p>
+              <h1 id="admin-cms-heading" className="text-3xl font-black">
+                Blog CMS Operations
+              </h1>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link to={ROUTES.BLOG}>View blog</Link>
+              </Button>
+              <Button asChild variant="outline" className="rounded-xl">
+                <Link to={ROUTES.ADMIN_PROFILE}>Profile</Link>
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                className="rounded-xl"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
           </div>
         </div>
 
         {message && (
-          <div className="rounded-xl border border-border bg-bg-secondary px-4 py-3 text-sm text-text-secondary">
+          <div
+            role="status"
+            aria-live="polite"
+            className="rounded-xl border border-border bg-bg-secondary px-4 py-3 text-sm text-text-secondary"
+          >
             {message}
           </div>
         )}
 
-        <div className="grid gap-3 sm:grid-cols-4">
+        <div
+          className="grid gap-3 sm:grid-cols-4"
+          role="tablist"
+          aria-label="Admin content sections"
+        >
           {[
             { key: "posts", label: `Posts (${posts.length})` },
             { key: "authors", label: `Authors (${authors.length})` },
@@ -676,24 +695,34 @@ export default function AdminBlogsPage() {
           ].map((item) => {
             const isActive = activeSection === item.key;
             return (
-              <button
+              <Button
                 key={item.key}
                 type="button"
                 onClick={() => setActiveSection(item.key as AdminSection)}
-                className={`rounded-xl border px-4 py-3 text-sm font-semibold transition ${
+                role="tab"
+                aria-selected={isActive}
+                aria-controls={`admin-panel-${item.key}`}
+                id={`admin-tab-${item.key}`}
+                variant={isActive ? "default" : "outline"}
+                className={`h-auto rounded-xl px-4 py-3 text-sm font-semibold transition ${
                   isActive
-                    ? "border-accent bg-accent text-black"
+                    ? "bg-accent text-black hover:bg-accent/90"
                     : "border-border bg-bg-secondary text-text-secondary hover:border-accent"
                 }`}
               >
                 {item.label}
-              </button>
+              </Button>
             );
           })}
         </div>
 
         {activeSection === "posts" && (
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div
+            id="admin-panel-posts"
+            role="tabpanel"
+            aria-labelledby="admin-tab-posts"
+            className="grid gap-8 lg:grid-cols-2"
+          >
             <div className="rounded-2xl border border-border bg-bg-secondary p-6">
               <h2 className="text-xl font-bold mb-4">
                 {editingPostId ? "Edit Post" : "Create Post"}
@@ -1035,7 +1064,12 @@ export default function AdminBlogsPage() {
         )}
 
         {activeSection === "authors" && (
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div
+            id="admin-panel-authors"
+            role="region"
+            aria-label="Authors management"
+            className="grid gap-8 lg:grid-cols-2"
+          >
             <div className="rounded-2xl border border-border bg-bg-secondary p-6">
               <h2 className="text-xl font-bold mb-4">
                 {editingAuthorId ? "Edit Author" : "Create Author"}
@@ -1218,7 +1252,12 @@ export default function AdminBlogsPage() {
         )}
 
         {activeSection === "categories" && (
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div
+            id="admin-panel-categories"
+            role="region"
+            aria-label="Categories management"
+            className="grid gap-8 lg:grid-cols-2"
+          >
             <div className="rounded-2xl border border-border bg-bg-secondary p-6">
               <h2 className="text-xl font-bold mb-4">
                 {editingCategoryId ? "Edit Category" : "Create Category"}
@@ -1384,7 +1423,12 @@ export default function AdminBlogsPage() {
         )}
 
         {activeSection === "tags" && (
-          <div className="grid gap-8 lg:grid-cols-2">
+          <div
+            id="admin-panel-tags"
+            role="region"
+            aria-label="Tags management"
+            className="grid gap-8 lg:grid-cols-2"
+          >
             <div className="rounded-2xl border border-border bg-bg-secondary p-6">
               <h2 className="text-xl font-bold mb-4">
                 {editingTagId ? "Edit Tag" : "Create Tag"}
@@ -1485,7 +1529,7 @@ export default function AdminBlogsPage() {
             </div>
           </div>
         )}
-      </div>
-    </section>
+      </section>
+    </main>
   );
 }

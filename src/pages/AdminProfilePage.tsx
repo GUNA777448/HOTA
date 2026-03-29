@@ -52,29 +52,17 @@ export default function AdminProfilePage() {
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    console.log("AdminProfilePage: useEffect triggered.");
     const unsub = onAuthStateChanged(auth, async (user) => {
-      console.log("AdminProfilePage: onAuthStateChanged callback fired.");
       if (!user) {
-        console.log("AdminProfilePage: No user found, navigating to login.");
         navigate(ROUTES.ADMIN_LOGIN, { replace: true });
         return;
       }
 
-      console.log("AdminProfilePage: User found, UID:", user.uid);
       try {
         const adminRef = doc(db, "admins", user.uid);
-        console.log(
-          "AdminProfilePage: Fetching document from Firestore:",
-          adminRef.path,
-        );
         const snapshot = await getDoc(adminRef);
-        console.log("AdminProfilePage: Firestore snapshot received.");
 
         if (!snapshot.exists()) {
-          console.log(
-            "AdminProfilePage: Document does not exist, creating fallback profile.",
-          );
           const fallbackProfile: AdminProfile = {
             uid: user.uid,
             name: user.displayName || "",
@@ -94,9 +82,6 @@ export default function AdminProfilePage() {
             { merge: true },
           );
 
-          console.log(
-            "AdminProfilePage: Fallback profile created and set in state.",
-          );
           setProfile(fallbackProfile);
           setForm({
             name: fallbackProfile.name,
@@ -107,9 +92,7 @@ export default function AdminProfilePage() {
           return;
         }
 
-        console.log("AdminProfilePage: Document exists, processing data.");
         const data = snapshot.data() as Partial<AdminProfile>;
-        console.log("AdminProfilePage: Raw data from Firestore:", data);
         const loaded: AdminProfile = {
           uid: user.uid,
           name: data.name || user.displayName || "",
@@ -121,7 +104,6 @@ export default function AdminProfilePage() {
           authProvider: data.authProvider || "password",
         };
 
-        console.log("AdminProfilePage: Loaded profile object:", loaded);
         setProfile(loaded);
         setForm({
           name: loaded.name,
@@ -143,17 +125,11 @@ export default function AdminProfilePage() {
             : "Failed to load admin profile.",
         );
       } finally {
-        console.log(
-          "AdminProfilePage: Finished loading, setting isLoading to false.",
-        );
         setIsLoading(false);
       }
     });
 
     return () => {
-      console.log(
-        "AdminProfilePage: useEffect cleanup, unsubscribing from onAuthStateChanged.",
-      );
       unsub();
     };
   }, [navigate]);
@@ -229,10 +205,13 @@ export default function AdminProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4 sm:p-6 lg:p-8">
-      <header className="flex items-center justify-between mb-8">
+    <main className="min-h-screen bg-background p-4 sm:p-6 lg:p-8">
+      <header className="mx-auto mb-8 flex w-full max-w-5xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Admin Profile</h1>
+          <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+            HOTA Admin
+          </p>
+          <h1 className="text-3xl font-black">Admin Profile</h1>
           <p className="text-muted-foreground">
             Manage your profile information.
           </p>
@@ -247,11 +226,14 @@ export default function AdminProfilePage() {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto">
-        <Card>
+      <section
+        className="mx-auto max-w-2xl"
+        aria-labelledby="profile-card-title"
+      >
+        <Card className="border-border/70 bg-card/80 shadow-xl">
           <form onSubmit={handleSubmit}>
             <CardHeader>
-              <CardTitle>Edit Profile</CardTitle>
+              <CardTitle id="profile-card-title">Edit Profile</CardTitle>
               <CardDescription>
                 Update your personal and contact information.
               </CardDescription>
@@ -308,9 +290,17 @@ export default function AdminProfilePage() {
               </div>
             </CardContent>
             <CardFooter className="flex justify-between items-center">
-              <div>
-                {message && <p className="text-sm text-green-500">{message}</p>}
-                {error && <p className="text-sm text-destructive">{error}</p>}
+              <div aria-live="polite" className="min-h-6">
+                {message && (
+                  <p className="text-sm text-emerald-500" role="status">
+                    {message}
+                  </p>
+                )}
+                {error && (
+                  <p className="text-sm text-destructive" role="alert">
+                    {error}
+                  </p>
+                )}
               </div>
               <Button type="submit" disabled={isSaving}>
                 {isSaving ? "Saving..." : "Save Changes"}
@@ -318,7 +308,7 @@ export default function AdminProfilePage() {
             </CardFooter>
           </form>
         </Card>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

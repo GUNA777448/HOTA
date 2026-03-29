@@ -2,37 +2,35 @@ import { useEffect, useRef, useState } from "react";
 
 export default function CustomCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
-  const dotRef = useRef<HTMLDivElement>(null);
+  const isFinePointerRef = useRef(false);
   const [isHovering, setIsHovering] = useState(false);
-  const sparkleTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     const cursor = cursorRef.current;
-    const dot = dotRef.current;
-    if (!cursor || !dot) return;
+    if (!cursor) return;
 
-    let mouseX = 0;
-    let mouseY = 0;
-    let cursorX = 0;
-    let cursorY = 0;
-    let dotX = 0;
-    let dotY = 0;
+    const mediaQuery = window.matchMedia("(hover: hover) and (pointer: fine)");
+    isFinePointerRef.current = mediaQuery.matches;
+
+    const setCursorMode = (enabled: boolean) => {
+      document.body.classList.toggle("custom-cursor-enabled", enabled);
+      if (!enabled) setIsHovering(false);
+    };
+
+    setCursorMode(isFinePointerRef.current);
+
+    const onMediaQueryChange = (event: MediaQueryListEvent) => {
+      isFinePointerRef.current = event.matches;
+      setCursorMode(event.matches);
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      // Create sparkle
-      if (sparkleTimeoutRef.current) {
-        clearTimeout(sparkleTimeoutRef.current);
-      }
-
-      sparkleTimeoutRef.current = window.setTimeout(() => {
-        createSparkle(e.clientX, e.clientY);
-      }, 50);
+      if (!isFinePointerRef.current) return;
+      cursor.style.transform = `translate(${e.clientX - 10}px, ${e.clientY - 10}px)`;
     };
 
     const handleMouseOver = (e: MouseEvent) => {
+      if (!isFinePointerRef.current) return;
       const target = e.target as HTMLElement;
       if (
         target.tagName === "A" ||
@@ -46,64 +44,23 @@ export default function CustomCursor() {
       }
     };
 
-    const createSparkle = (x: number, y: number) => {
-      const sparkle = document.createElement("div");
-      sparkle.className = "sparkle";
-      sparkle.style.left = `${x}px`;
-      sparkle.style.top = `${y}px`;
-      document.body.appendChild(sparkle);
-
-      setTimeout(() => {
-        sparkle.remove();
-      }, 800);
-    };
-
-    let rafId: number;
-
-    const animateCursor = () => {
-      // Smooth cursor movement with easing
-      const ease = 0.15;
-      const dotEase = 0.3;
-
-      cursorX += (mouseX - cursorX) * ease;
-      cursorY += (mouseY - cursorY) * ease;
-      dotX += (mouseX - dotX) * dotEase;
-      dotY += (mouseY - dotY) * dotEase;
-
-      if (cursor) {
-        cursor.style.transform = `translate(${cursorX - 10}px, ${cursorY - 10}px)`;
-      }
-      if (dot) {
-        dot.style.transform = `translate(${dotX - 3}px, ${dotY - 3}px)`;
-      }
-
-      rafId = requestAnimationFrame(animateCursor);
-    };
-
     document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseover", handleMouseOver);
-    rafId = requestAnimationFrame(animateCursor);
+    mediaQuery.addEventListener("change", onMediaQueryChange);
 
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseover", handleMouseOver);
-      cancelAnimationFrame(rafId);
-      if (sparkleTimeoutRef.current) {
-        clearTimeout(sparkleTimeoutRef.current);
-      }
+      mediaQuery.removeEventListener("change", onMediaQueryChange);
+      setCursorMode(false);
     };
   }, []);
 
   return (
-    <>
-      <div
-        ref={cursorRef}
-        className={`custom-cursor ${isHovering ? "hover" : ""}`}
-      />
-      <div
-        ref={dotRef}
-        className={`custom-cursor-dot ${isHovering ? "hover" : ""}`}
-      />
-    </>
+    <div
+      ref={cursorRef}
+      className={`custom-cursor ${isHovering ? "hover" : ""}`}
+      aria-hidden="true"
+    />
   );
 }
