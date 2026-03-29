@@ -1,13 +1,94 @@
-// Blog module constants — authors, categories, tags, and sample posts
-import type {
-  BlogAuthor,
-  BlogCategory,
-  BlogTag,
-  BlogPost,
-} from "@/interfaces/blog.interfaces";
+/**
+ * Firestore Seed Script — HOTA Blog Data
+ * Usage: node scripts/seed-firestore.js
+ *
+ * IMPORTANT: Before running, set your Firestore rules to allow writes:
+ *   rules_version = '2';
+ *   service cloud.firestore {
+ *     match /databases/{database}/documents {
+ *       match /{document=**} { allow read, write: if true; }
+ *     }
+ *   }
+ * Re-lock after seeding is complete.
+ */
+
+import { readFileSync } from "node:fs";
+import { initializeApp, applicationDefault, cert } from "firebase-admin/app";
+import { getFirestore, Timestamp } from "firebase-admin/firestore";
+
+// ── Firebase Config ─────────────────────────────────────────────────────
+const firebaseConfig = {
+  apiKey: "AIzaSyDrYywtTJYG1dJdpwMQVQEy6nNw98vzNdA",
+  authDomain: "hota-creatives.firebaseapp.com",
+  projectId: "hota-creatives",
+  storageBucket: "hota-creatives.firebasestorage.app",
+  messagingSenderId: "376861675756",
+  appId: "1:376861675756:web:d610c170580e680f4f55c9",
+};
+
+function getAdminCredential() {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_JSON) {
+    try {
+      const raw = readFileSync(
+        process.env.FIREBASE_SERVICE_ACCOUNT_JSON,
+        "utf8",
+      );
+      return cert(JSON.parse(raw));
+    } catch (error) {
+      throw new Error(
+        `Invalid FIREBASE_SERVICE_ACCOUNT_JSON path or JSON: ${error.message}`,
+      );
+    }
+  }
+
+  if (process.env.FIREBASE_SERVICE_ACCOUNT_BASE64) {
+    try {
+      const raw = Buffer.from(
+        process.env.FIREBASE_SERVICE_ACCOUNT_BASE64,
+        "base64",
+      ).toString("utf8");
+      return cert(JSON.parse(raw));
+    } catch (error) {
+      throw new Error(
+        `Invalid FIREBASE_SERVICE_ACCOUNT_BASE64 value: ${error.message}`,
+      );
+    }
+  }
+
+  return applicationDefault();
+}
+
+const app = initializeApp({
+  credential: getAdminCredential(),
+  projectId: firebaseConfig.projectId,
+  storageBucket: firebaseConfig.storageBucket,
+});
+const db = getFirestore(app);
+
+// ── Helper ──────────────────────────────────────────────────────────────
+function toTimestamp(isoString) {
+  return Timestamp.fromDate(new Date(isoString));
+}
+
+function generateSearchTokens(...strings) {
+  const tokens = new Set();
+  for (const str of strings) {
+    if (!str) continue;
+    const words = str.toLowerCase().split(/[\s,\-\/]+/);
+    for (const word of words) {
+      const clean = word.replace(/[^a-z0-9]/g, "");
+      if (clean.length >= 2) tokens.add(clean);
+    }
+  }
+  return Array.from(tokens);
+}
+
+function unique(values) {
+  return Array.from(new Set(values));
+}
 
 // ── Authors ─────────────────────────────────────────────────────────────
-export const BLOG_AUTHORS: BlogAuthor[] = [
+const AUTHORS = [
   {
     id: "author-1",
     name: "Chinni Suryan",
@@ -20,11 +101,15 @@ export const BLOG_AUTHORS: BlogAuthor[] = [
       linkedin: "https://www.linkedin.com/in/chinnisuryan",
       instagram: "https://www.instagram.com/hota.creatives",
     },
+    isActive: true,
+    postCount: 0,
   },
 ];
 
+const PRIMARY_AUTHOR = AUTHORS[0];
+
 // ── Categories ──────────────────────────────────────────────────────────
-export const BLOG_CATEGORIES: BlogCategory[] = [
+const CATEGORIES = [
   {
     id: "cat-1",
     name: "Brand Strategy",
@@ -32,6 +117,8 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     description:
       "Insights on building and positioning your brand for long-term growth.",
     color: "#f4c20d",
+    postCount: 0,
+    isActive: true,
   },
   {
     id: "cat-2",
@@ -40,6 +127,8 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     description:
       "Tips, trends, and strategies for winning on social platforms.",
     color: "#4ade80",
+    postCount: 0,
+    isActive: true,
   },
   {
     id: "cat-3",
@@ -48,6 +137,8 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     description:
       "Data-driven marketing strategies for measurable business growth.",
     color: "#60a5fa",
+    postCount: 0,
+    isActive: true,
   },
   {
     id: "cat-4",
@@ -56,6 +147,8 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     description:
       "Creative design thinking, visual identity, and aesthetic trends.",
     color: "#c084fc",
+    postCount: 0,
+    isActive: true,
   },
   {
     id: "cat-5",
@@ -64,29 +157,38 @@ export const BLOG_CATEGORIES: BlogCategory[] = [
     description:
       "Analysis of market trends, case studies, and industry developments.",
     color: "#fb923c",
+    postCount: 0,
+    isActive: true,
   },
 ];
 
 // ── Tags ────────────────────────────────────────────────────────────────
-export const BLOG_TAGS: BlogTag[] = [
-  { id: "tag-1", name: "SEO", slug: "seo" },
-  { id: "tag-2", name: "Content Marketing", slug: "content-marketing" },
-  { id: "tag-3", name: "Branding", slug: "branding" },
-  { id: "tag-4", name: "Instagram", slug: "instagram" },
-  { id: "tag-5", name: "Ads", slug: "ads" },
-  { id: "tag-6", name: "Case Study", slug: "case-study" },
-  { id: "tag-7", name: "UI/UX", slug: "ui-ux" },
-  { id: "tag-8", name: "Video", slug: "video" },
-  { id: "tag-9", name: "Analytics", slug: "analytics" },
-  { id: "tag-10", name: "Startup", slug: "startup" },
+const TAGS = [
+  { id: "tag-1", name: "SEO", slug: "seo", postCount: 0 },
+  {
+    id: "tag-2",
+    name: "Content Marketing",
+    slug: "content-marketing",
+    postCount: 0,
+  },
+  { id: "tag-3", name: "Branding", slug: "branding", postCount: 0 },
+  { id: "tag-4", name: "Instagram", slug: "instagram", postCount: 0 },
+  { id: "tag-5", name: "Ads", slug: "ads", postCount: 0 },
+  { id: "tag-6", name: "Case Study", slug: "case-study", postCount: 0 },
+  { id: "tag-7", name: "UI/UX", slug: "ui-ux", postCount: 0 },
+  { id: "tag-8", name: "Video", slug: "video", postCount: 0 },
+  { id: "tag-9", name: "Analytics", slug: "analytics", postCount: 0 },
+  { id: "tag-10", name: "Startup", slug: "startup", postCount: 0 },
 ];
 
-// ── Blog Posts ──────────────────────────────────────────────────────────
-export const BLOG_POSTS: BlogPost[] = [
+// ── Posts ───────────────────────────────────────────────────────────────
+// Using references to the arrays above (same indexes as blog.constants.ts)
+const POSTS = [
   {
     id: "post-1",
     title: "Why Most Indian Brands Fail at Social Media (And How to Fix It)",
     slug: "why-indian-brands-fail-social-media",
+    status: "published",
     metaDescription:
       "Discover the top reasons Indian brands struggle on social media and learn actionable strategies to transform your digital presence and engagement.",
     excerpt:
@@ -94,9 +196,25 @@ export const BLOG_POSTS: BlogPost[] = [
     coverImage:
       "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=1200&h=630&fit=crop",
     coverImageAlt: "Social media strategy planning on a digital screen",
-    category: BLOG_CATEGORIES[1],
-    tags: [BLOG_TAGS[3], BLOG_TAGS[1], BLOG_TAGS[2]],
-    author: BLOG_AUTHORS[0],
+    category: {
+      id: "cat-2",
+      name: "Social Media",
+      slug: "social-media",
+      color: "#4ade80",
+    },
+    tags: [
+      { id: "tag-4", name: "Instagram", slug: "instagram" },
+      { id: "tag-2", name: "Content Marketing", slug: "content-marketing" },
+      { id: "tag-3", name: "Branding", slug: "branding" },
+    ],
+    author: {
+      id: "author-1",
+      name: "Guru Nandineni",
+      slug: "guru-nandineni",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+      role: "Founder & Creative Director",
+    },
     publishDate: "2026-02-15T10:00:00Z",
     readTime: 8,
     featured: true,
@@ -166,34 +284,19 @@ export const BLOG_POSTS: BlogPost[] = [
           "The 3E Content Framework: Educate, Entertain, Empower — the foundation of every successful social strategy.",
         content: "",
       },
-      {
-        type: "heading",
-        level: 3,
-        id: "educate",
-        content: "Educate",
-      },
+      { type: "heading", level: 3, id: "educate", content: "Educate" },
       {
         type: "paragraph",
         content:
           "Share industry knowledge, tips, and how-tos that position your brand as an authority. This builds trust and keeps your audience coming back for more.",
       },
-      {
-        type: "heading",
-        level: 3,
-        id: "entertain",
-        content: "Entertain",
-      },
+      { type: "heading", level: 3, id: "entertain", content: "Entertain" },
       {
         type: "paragraph",
         content:
           "Create content that people enjoy consuming — memes, relatable stories, behind-the-scenes peeks. Entertainment content drives shares and expands reach organically.",
       },
-      {
-        type: "heading",
-        level: 3,
-        id: "empower",
-        content: "Empower",
-      },
+      { type: "heading", level: 3, id: "empower", content: "Empower" },
       {
         type: "paragraph",
         content:
@@ -226,6 +329,7 @@ export const BLOG_POSTS: BlogPost[] = [
     id: "post-2",
     title: "The Complete Guide to Brand Positioning in 2026",
     slug: "complete-guide-brand-positioning-2026",
+    status: "published",
     metaDescription:
       "Master brand positioning in 2026 with this comprehensive guide covering strategy, differentiation, and real-world examples from Indian markets.",
     excerpt:
@@ -234,9 +338,25 @@ export const BLOG_POSTS: BlogPost[] = [
       "https://images.unsplash.com/photo-1553028826-f4804a6dba3b?w=1200&h=630&fit=crop",
     coverImageAlt:
       "Brand strategy workspace with mood boards and color palettes",
-    category: BLOG_CATEGORIES[0],
-    tags: [BLOG_TAGS[2], BLOG_TAGS[1], BLOG_TAGS[9]],
-    author: BLOG_AUTHORS[0],
+    category: {
+      id: "cat-1",
+      name: "Brand Strategy",
+      slug: "brand-strategy",
+      color: "#f4c20d",
+    },
+    tags: [
+      { id: "tag-3", name: "Branding", slug: "branding" },
+      { id: "tag-2", name: "Content Marketing", slug: "content-marketing" },
+      { id: "tag-10", name: "Startup", slug: "startup" },
+    ],
+    author: {
+      id: "author-1",
+      name: "Guru Nandineni",
+      slug: "guru-nandineni",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+      role: "Founder & Creative Director",
+    },
     publishDate: "2026-02-08T10:00:00Z",
     readTime: 12,
     featured: false,
@@ -342,6 +462,7 @@ export const BLOG_POSTS: BlogPost[] = [
     id: "post-3",
     title: "Performance Marketing on a Budget: A Startup's Playbook",
     slug: "performance-marketing-budget-startup-playbook",
+    status: "published",
     metaDescription:
       "Learn how startups can run high-ROI performance marketing campaigns on lean budgets. Practical strategies for Meta Ads, Google Ads, and more.",
     excerpt:
@@ -349,9 +470,25 @@ export const BLOG_POSTS: BlogPost[] = [
     coverImage:
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=630&fit=crop",
     coverImageAlt: "Analytics dashboard showing marketing performance metrics",
-    category: BLOG_CATEGORIES[2],
-    tags: [BLOG_TAGS[4], BLOG_TAGS[8], BLOG_TAGS[9]],
-    author: BLOG_AUTHORS[0],
+    category: {
+      id: "cat-3",
+      name: "Performance Marketing",
+      slug: "performance-marketing",
+      color: "#60a5fa",
+    },
+    tags: [
+      { id: "tag-5", name: "Ads", slug: "ads" },
+      { id: "tag-9", name: "Analytics", slug: "analytics" },
+      { id: "tag-10", name: "Startup", slug: "startup" },
+    ],
+    author: {
+      id: "author-3",
+      name: "Arjun Reddy",
+      slug: "arjun-reddy",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face",
+      role: "Performance Marketing Lead",
+    },
     publishDate: "2026-01-28T10:00:00Z",
     readTime: 10,
     featured: false,
@@ -436,6 +573,7 @@ export const BLOG_POSTS: BlogPost[] = [
     id: "post-4",
     title: "Design Systems: Why Your Brand Needs One Before Scaling",
     slug: "design-systems-brand-scaling",
+    status: "published",
     metaDescription:
       "Learn why a design system is critical for brand consistency and scalability, and how to build one even if you're a small team.",
     excerpt:
@@ -443,9 +581,24 @@ export const BLOG_POSTS: BlogPost[] = [
     coverImage:
       "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=1200&h=630&fit=crop",
     coverImageAlt: "Design system components laid out on a workspace",
-    category: BLOG_CATEGORIES[3],
-    tags: [BLOG_TAGS[6], BLOG_TAGS[2]],
-    author: BLOG_AUTHORS[0],
+    category: {
+      id: "cat-4",
+      name: "Design & Creative",
+      slug: "design-creative",
+      color: "#c084fc",
+    },
+    tags: [
+      { id: "tag-7", name: "UI/UX", slug: "ui-ux" },
+      { id: "tag-3", name: "Branding", slug: "branding" },
+    ],
+    author: {
+      id: "author-2",
+      name: "Priya Sharma",
+      slug: "priya-sharma",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
+      role: "Head of Content Strategy",
+    },
     publishDate: "2026-01-20T10:00:00Z",
     readTime: 7,
     featured: false,
@@ -521,6 +674,7 @@ export const BLOG_POSTS: BlogPost[] = [
     id: "post-5",
     title: "How We Grew a D2C Brand's Instagram from 2K to 100K in 6 Months",
     slug: "d2c-instagram-growth-case-study",
+    status: "published",
     metaDescription:
       "A detailed case study of how HOTA grew a D2C brand's Instagram following from 2,000 to 100,000 in just 6 months using organic and paid strategies.",
     excerpt:
@@ -528,9 +682,25 @@ export const BLOG_POSTS: BlogPost[] = [
     coverImage:
       "https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?w=1200&h=630&fit=crop",
     coverImageAlt: "Instagram mobile interface showing growth metrics",
-    category: BLOG_CATEGORIES[4],
-    tags: [BLOG_TAGS[3], BLOG_TAGS[5], BLOG_TAGS[1]],
-    author: BLOG_AUTHORS[0],
+    category: {
+      id: "cat-5",
+      name: "Industry Insights",
+      slug: "industry-insights",
+      color: "#fb923c",
+    },
+    tags: [
+      { id: "tag-4", name: "Instagram", slug: "instagram" },
+      { id: "tag-6", name: "Case Study", slug: "case-study" },
+      { id: "tag-2", name: "Content Marketing", slug: "content-marketing" },
+    ],
+    author: {
+      id: "author-1",
+      name: "Guru Nandineni",
+      slug: "guru-nandineni",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+      role: "Founder & Creative Director",
+    },
     publishDate: "2026-01-10T10:00:00Z",
     readTime: 15,
     featured: false,
@@ -574,34 +744,19 @@ export const BLOG_POSTS: BlogPost[] = [
         content:
           "We rebuilt the entire brand presence from scratch — new visual identity, content pillars, bio optimization, and highlight covers. We established three content pillars: Skincare Education, Ingredient Deep-Dives, and Customer Transformations.",
       },
-      {
-        type: "heading",
-        level: 3,
-        id: "phase-2",
-        content: "Phase 2: Growth",
-      },
+      { type: "heading", level: 3, id: "phase-2", content: "Phase 2: Growth" },
       {
         type: "paragraph",
         content:
           "With the foundation set, we ramped up posting frequency to 5x/week, launched a Reels strategy focused on trending audio + educational hooks, and initiated collaborations with micro-influencers (5K-50K followers).",
       },
-      {
-        type: "heading",
-        level: 3,
-        id: "phase-3",
-        content: "Phase 3: Scale",
-      },
+      { type: "heading", level: 3, id: "phase-3", content: "Phase 3: Scale" },
       {
         type: "paragraph",
         content:
           "In the final phase, we combined organic momentum with strategic paid promotion. We boosted top-performing Reels, ran targeted ads to lookalike audiences, and introduced IG Shopping to convert followers into customers.",
       },
-      {
-        type: "heading",
-        level: 2,
-        id: "the-results",
-        content: "The Results",
-      },
+      { type: "heading", level: 2, id: "the-results", content: "The Results" },
       {
         type: "list",
         ordered: false,
@@ -625,6 +780,7 @@ export const BLOG_POSTS: BlogPost[] = [
     id: "post-6",
     title: "The Rise of Short-Form Video: What Brands Need to Know in 2026",
     slug: "short-form-video-brands-2026",
+    status: "published",
     metaDescription:
       "Everything brands need to know about short-form video in 2026 — from Reels to Shorts to TikTok. Strategy, production tips, and platform insights.",
     excerpt:
@@ -632,9 +788,25 @@ export const BLOG_POSTS: BlogPost[] = [
     coverImage:
       "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=1200&h=630&fit=crop",
     coverImageAlt: "Video content creation setup with camera and lighting",
-    category: BLOG_CATEGORIES[1],
-    tags: [BLOG_TAGS[7], BLOG_TAGS[3], BLOG_TAGS[1]],
-    author: BLOG_AUTHORS[0],
+    category: {
+      id: "cat-2",
+      name: "Social Media",
+      slug: "social-media",
+      color: "#4ade80",
+    },
+    tags: [
+      { id: "tag-8", name: "Video", slug: "video" },
+      { id: "tag-4", name: "Instagram", slug: "instagram" },
+      { id: "tag-2", name: "Content Marketing", slug: "content-marketing" },
+    ],
+    author: {
+      id: "author-2",
+      name: "Priya Sharma",
+      slug: "priya-sharma",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop&crop=face",
+      role: "Head of Content Strategy",
+    },
     publishDate: "2026-02-22T10:00:00Z",
     readTime: 9,
     featured: false,
@@ -711,44 +883,202 @@ export const BLOG_POSTS: BlogPost[] = [
   },
 ];
 
-// Helper to get blog post by slug
-export function getBlogPostBySlug(slug: string): BlogPost | undefined {
-  return BLOG_POSTS.find((p) => p.slug === slug);
+function buildPostCounts() {
+  const authorCounts = new Map();
+  const categoryCounts = new Map();
+  const tagCounts = new Map();
+
+  for (const post of POSTS) {
+    authorCounts.set(
+      PRIMARY_AUTHOR.id,
+      (authorCounts.get(PRIMARY_AUTHOR.id) || 0) + 1,
+    );
+    categoryCounts.set(
+      post.category.id,
+      (categoryCounts.get(post.category.id) || 0) + 1,
+    );
+
+    for (const tag of post.tags) {
+      tagCounts.set(tag.id, (tagCounts.get(tag.id) || 0) + 1);
+    }
+  }
+
+  return { authorCounts, categoryCounts, tagCounts };
 }
 
-// Helper to get author by slug
-export function getBlogAuthorBySlug(slug: string): BlogAuthor | undefined {
-  return BLOG_AUTHORS.find((a) => a.slug === slug);
-}
+const { authorCounts, categoryCounts, tagCounts } = buildPostCounts();
 
-// Helper to get category by slug
-export function getBlogCategoryBySlug(slug: string): BlogCategory | undefined {
-  return BLOG_CATEGORIES.find((c) => c.slug === slug);
-}
+function normalizePostForFirestore(post) {
+  const author = {
+    id: PRIMARY_AUTHOR.id,
+    name: PRIMARY_AUTHOR.name,
+    slug: PRIMARY_AUTHOR.slug,
+    avatar: PRIMARY_AUTHOR.avatar,
+    role: PRIMARY_AUTHOR.role,
+  };
 
-// Helper to get posts by author
-export function getPostsByAuthor(authorId: string): BlogPost[] {
-  return BLOG_POSTS.filter((p) => p.author.id === authorId);
-}
+  const tagIds = post.tags.map((tag) => tag.id);
+  const tagSlugs = post.tags.map((tag) => tag.slug);
+  const tagNames = post.tags.map((tag) => tag.name);
+  const publishedAt = toTimestamp(post.publishDate);
 
-// Helper to get posts by category
-export function getPostsByCategory(categorySlug: string): BlogPost[] {
-  return BLOG_POSTS.filter((p) => p.category.slug === categorySlug);
-}
-
-// Helper to get related posts
-export function getRelatedPosts(post: BlogPost): BlogPost[] {
-  return BLOG_POSTS.filter((p) => post.relatedPostIds.includes(p.id));
-}
-
-// Helper to search posts
-export function searchBlogPosts(query: string): BlogPost[] {
-  const q = query.toLowerCase();
-  return BLOG_POSTS.filter(
-    (p) =>
-      p.title.toLowerCase().includes(q) ||
-      p.excerpt.toLowerCase().includes(q) ||
-      p.tags.some((t) => t.name.toLowerCase().includes(q)) ||
-      p.category.name.toLowerCase().includes(q),
+  const searchTokens = unique(
+    generateSearchTokens(
+      post.title,
+      post.excerpt,
+      post.metaDescription,
+      author.name,
+      post.category.name,
+      ...tagNames,
+      ...tagSlugs,
+      post.slug,
+    ),
   );
+
+  return {
+    id: post.id,
+    schemaVersion: 2,
+    status: post.status,
+    title: post.title,
+    slug: post.slug,
+    metaDescription: post.metaDescription,
+    excerpt: post.excerpt,
+    coverImage: post.coverImage,
+    coverImageAlt: post.coverImageAlt,
+    featured: post.featured,
+    readTime: post.readTime,
+    relatedPostIds: post.relatedPostIds,
+    content: post.content,
+
+    // Query-friendly top-level keys
+    authorId: author.id,
+    authorSlug: author.slug,
+    authorName: author.name,
+    categoryId: post.category.id,
+    categorySlug: post.category.slug,
+    categoryName: post.category.name,
+    tagIds,
+    tagSlugs,
+
+    // Lightweight denormalized snapshots for listing cards
+    authorSnapshot: {
+      id: author.id,
+      name: author.name,
+      slug: author.slug,
+      avatar: author.avatar,
+      role: author.role,
+    },
+    categorySnapshot: {
+      id: post.category.id,
+      name: post.category.name,
+      slug: post.category.slug,
+      color: post.category.color,
+    },
+    tagSnapshots: post.tags.map((tag) => ({
+      id: tag.id,
+      name: tag.name,
+      slug: tag.slug,
+    })),
+
+    // Legacy nested keys retained for compatibility
+    author,
+    category: post.category,
+    tags: post.tags,
+
+    publishDate: publishedAt,
+    publishedAt,
+    searchTokens,
+    stats: {
+      viewCount: 0,
+      shareCount: 0,
+    },
+    createdAt: Timestamp.now(),
+    updatedAt: Timestamp.now(),
+  };
 }
+
+// ── Seed Functions ───────────────────────────────────────────────────────
+async function seedAuthors() {
+  console.log("Seeding authors...");
+  const batch = db.batch();
+  for (const author of AUTHORS) {
+    const ref = db.collection("blog_authors").doc(author.id);
+    batch.set(ref, {
+      ...author,
+      nameLower: author.name.toLowerCase(),
+      searchTokens: generateSearchTokens(author.name, author.slug, author.role),
+      postCount: authorCounts.get(author.id) || 0,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+  }
+  await batch.commit();
+  console.log(`  ✓ ${AUTHORS.length} authors written`);
+}
+
+async function seedCategories() {
+  console.log("Seeding categories...");
+  const batch = db.batch();
+  for (const category of CATEGORIES) {
+    const ref = db.collection("blog_categories").doc(category.id);
+    batch.set(ref, {
+      ...category,
+      nameLower: category.name.toLowerCase(),
+      searchTokens: generateSearchTokens(category.name, category.slug),
+      postCount: categoryCounts.get(category.id) || 0,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+  }
+  await batch.commit();
+  console.log(`  ✓ ${CATEGORIES.length} categories written`);
+}
+
+async function seedTags() {
+  console.log("Seeding tags...");
+  const batch = db.batch();
+  for (const tag of TAGS) {
+    const ref = db.collection("blog_tags").doc(tag.id);
+    batch.set(ref, {
+      ...tag,
+      nameLower: tag.name.toLowerCase(),
+      searchTokens: generateSearchTokens(tag.name, tag.slug),
+      postCount: tagCounts.get(tag.id) || 0,
+      createdAt: Timestamp.now(),
+      updatedAt: Timestamp.now(),
+    });
+  }
+  await batch.commit();
+  console.log(`  ✓ ${TAGS.length} tags written`);
+}
+
+async function seedPosts() {
+  console.log("Seeding posts...");
+  // Firestore batch limit is 500 ops; 6 posts is well within limits
+  const batch = db.batch();
+  for (const post of POSTS) {
+    const ref = db.collection("blog_posts").doc(post.id);
+    batch.set(ref, normalizePostForFirestore(post));
+  }
+  await batch.commit();
+  console.log(`  ✓ ${POSTS.length} posts written`);
+}
+
+// ── Main ─────────────────────────────────────────────────────────────────
+async function main() {
+  console.log("🚀 Starting Firestore seed for project: hota-creatives\n");
+  try {
+    await seedAuthors();
+    await seedCategories();
+    await seedTags();
+    await seedPosts();
+    console.log("\n✅ All data seeded successfully!");
+  } catch (err) {
+    console.error("\n❌ Seed failed:", err.message);
+    console.error(err);
+    process.exit(1);
+  }
+  process.exit(0);
+}
+
+main();

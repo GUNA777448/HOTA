@@ -9,3 +9,7 @@ export { default as BlogListingPage } from "./BlogListingPage";
 export { default as BlogArticlePage } from "./BlogArticlePage";
 export { default as BlogAuthorPage } from "./BlogAuthorPage";
 export { default as BlogCategoryPage } from "./BlogCategoryPage";
+export { default as AdminLoginPage } from "./AdminLoginPage";
+export { default as AdminBlogsPage } from "./AdminBlogsPage";
+export { default as AdminProfilePage } from "./AdminProfilePage";
+export { default as NotFoundPage } from "./NotFoundPage";

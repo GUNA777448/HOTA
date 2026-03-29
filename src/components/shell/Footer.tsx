@@ -1,4 +1,4 @@
-import FooterSection from "@/components/ui/footer-section";
+import FooterSection from "@/components/shell/footer-section";
 
 export default function Footer() {
   return <FooterSection />;

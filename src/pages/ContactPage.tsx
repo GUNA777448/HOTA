@@ -1,4 +1,7 @@
-import { useState, type FormEvent } from "react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
 import {
   Mail,
   Phone,
@@ -12,74 +15,64 @@ import {
   Headset,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useSEO } from "../components/common/SEO";
+import { useSEO } from "@/components/shell/SEO";
 import { contact, socialLinks, LOTTIE_ANIMATIONS } from "../constants";
-import LottieAnimation from "../components/common/LottieAnimation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import LottieAnimation from "@/components/composite/LottieAnimation";
+import { Button } from "@/components/base/button";
+import { Input } from "@/components/base/input";
+import { Textarea } from "@/components/base/textarea";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/base/form";
+
+const formSchema = z.object({
+  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
+  email: z.string().email({ message: "Invalid email address." }),
+  phone: z.string().regex(/^[0-9]{10}$/, { message: "Phone number must be exactly 10 digits." }),
+  company: z.string().optional(),
+  service: z.string().optional(),
+  budget: z.string().optional(),
+  message: z.string().optional(),
+});
 
 const APPS_SCRIPT_URL =
   "https://script.google.com/macros/s/AKfycbwaJLwpyoWSCeh5NklVgjTAR7jPvOlwZYbCWMxkYU9k_KWIpuVjaKyFixzFR8h9FNbF/exec";
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    company: "",
-    service: "",
-    budget: "",
-    message: "",
-  });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  // Simple email regex for validation
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      company: "",
+      service: "",
+      budget: "",
+      message: "",
+    },
+  });
 
-  const validateForm = () => {
-    if (!formData.name.trim()) {
-      setErrorMsg("Name is required.");
-      toast.error("Name is required.", {
-        style: { background: "#ef4444", color: "#fff" },
-      });
-      return false;
-    }
-    if (!formData.email.trim() || !emailRegex.test(formData.email)) {
-      setErrorMsg("A valid email is required.");
-      toast.error("A valid email is required.", {
-        style: { background: "#ef4444", color: "#fff" },
-      });
-      return false;
-    }
-    // No validation for phone number
-    return true;
-  };
-
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setErrorMsg("");
-    console.log("[Audit Form] Submit clicked", formData);
-    if (!validateForm()) {
-      console.log("[Audit Form] Validation failed", formData);
-      return;
-    }
     setIsLoading(true);
 
     try {
-      console.log("[Audit Form] Sending request to:", APPS_SCRIPT_URL);
       const res = await fetch(APPS_SCRIPT_URL, {
         method: "POST",
-        body: JSON.stringify(formData),
+        body: JSON.stringify(values),
         headers: { "Content-Type": "text/plain" },
       });
 
-      console.log("[Audit Form] Response status:", res.status);
       const result = await res.json();
-      console.log("[Audit Form] Response JSON:", result);
 
       if (result.success) {
         setIsSubmitted(true);
@@ -88,16 +81,7 @@ export default function ContactPage() {
           style: { background: "#22c55e", color: "#fff" },
         });
         setTimeout(() => setIsSubmitted(false), 6000);
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          company: "",
-          service: "",
-          budget: "",
-          message: "",
-        });
-        console.log("[Audit Form] Submission successful");
+        form.reset();
       } else {
         const msg = result.message || "Something went wrong. Please try again.";
         setErrorMsg(msg);
@@ -105,7 +89,6 @@ export default function ContactPage() {
           description: msg,
           style: { background: "#ef4444", color: "#fff" },
         });
-        console.log("[Audit Form] Submission failed", msg);
       }
     } catch (err) {
       const msg =
@@ -144,8 +127,8 @@ export default function ContactPage() {
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-text-secondary">
               Our motive is to make growth decisions simpler for you. Share what
-              you&apos;re building and we&apos;ll suggest the right next move for brand,
-              content, and performance.
+              you&apos;re building and we&apos;ll suggest the right next move
+              for brand, content, and performance.
             </p>
             <div className="mt-8 grid max-w-xl gap-3 sm:grid-cols-3">
               {[
@@ -169,8 +152,8 @@ export default function ContactPage() {
               className="h-56 w-full"
             />
             <p className="mt-4 text-center text-sm text-text-secondary">
-              Share your challenge. We&apos;ll respond with actionable next steps
-              within 24 hours.
+              Share your challenge. We&apos;ll respond with actionable next
+              steps within 24 hours.
             </p>
           </div>
         </div>
@@ -199,164 +182,169 @@ export default function ContactPage() {
                     </div>
                   )}
 
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      <div>
-                        <Label className="mb-2 block text-text-secondary">
-                          Your Name *
-                        </Label>
-                        <Input
-                          type="text"
-                          required
-                          value={formData.name}
-                          onChange={(e) =>
-                            setFormData({ ...formData, name: e.target.value })
-                          }
-                          className="h-12 rounded-xl border-border bg-bg-card"
-                          placeholder="Rajesh Kumar"
+                  <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+                      <div className="grid sm:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-text-secondary">Your Name *</FormLabel>
+                              <FormControl>
+                                <Input className="h-12 rounded-xl border-border bg-bg-card" placeholder="Rajesh Kumar" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="email"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-text-secondary">Email Address *</FormLabel>
+                              <FormControl>
+                                <Input type="email" className="h-12 rounded-xl border-border bg-bg-card" placeholder="rajesh@company.com" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
-                      <div>
-                        <Label className="mb-2 block text-text-secondary">
-                          Email Address *
-                        </Label>
-                        <Input
-                          type="email"
-                          required
-                          value={formData.email}
-                          onChange={(e) =>
-                            setFormData({ ...formData, email: e.target.value })
-                          }
-                          className="h-12 rounded-xl border-border bg-bg-card"
-                          placeholder="rajesh@company.com"
+
+                      <div className="grid sm:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="phone"
+                          render={({ field: { onChange, ...field } }) => (
+                            <FormItem>
+                              <FormLabel className="text-text-secondary">Phone Number *</FormLabel>
+                              <FormControl>
+                                <div className="flex items-center">
+                                  <span className="inline-flex items-center px-3 py-3 rounded-l-xl bg-bg-card border border-r-0 border-border text-text-muted select-none">
+                                    +91
+                                  </span>
+                                  <Input
+                                    type="tel"
+                                    maxLength={10}
+                                    onChange={(e) => {
+                                      const val = e.target.value.replace(/[^0-9]/g, "");
+                                      onChange(val);
+                                    }}
+                                    className="h-12 rounded-r-xl rounded-l-none border-border bg-bg-card"
+                                    placeholder="9876543210"
+                                    {...field}
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="company"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-text-secondary">Company / Brand Name</FormLabel>
+                              <FormControl>
+                                <Input className="h-12 rounded-xl border-border bg-bg-card" placeholder="Your Brand Name" {...field} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
-                    </div>
 
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      <div>
-                        <Label className="mb-2 block text-text-secondary">
-                          Phone Number *
-                        </Label>
-                        <div className="flex items-center">
-                          <span className="inline-flex items-center px-3 py-3 rounded-l-xl bg-bg-card border border-r-0 border-border text-text-muted select-none">
-                            +91
-                          </span>
-                          <Input
-                            type="tel"
-                            required
-                            maxLength={10}
-                            value={formData.phone}
-                            onChange={(e) => {
-                              const val = e.target.value.replace(/[^0-9]/g, "");
-                              setFormData({ ...formData, phone: val });
-                            }}
-                            className="h-12 rounded-r-xl rounded-l-none border-border bg-bg-card"
-                            placeholder="9876543210"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <Label className="mb-2 block text-text-secondary">
-                          Company / Brand Name
-                        </Label>
-                        <Input
-                          type="text"
-                          value={formData.company}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              company: e.target.value,
-                            })
-                          }
-                          className="h-12 rounded-xl border-border bg-bg-card"
-                          placeholder="Your Brand Name"
+                      <div className="grid sm:grid-cols-2 gap-6">
+                        <FormField
+                          control={form.control}
+                          name="service"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-text-secondary">Service Interested In</FormLabel>
+                              <FormControl>
+                                <select
+                                  className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary transition-colors duration-300"
+                                  {...field}
+                                >
+                                  <option value="">Select a service</option>
+                                  <option value="social-media">Social Media Management</option>
+                                  <option value="content">Content Creation</option>
+                                  <option value="performance">Performance Marketing</option>
+                                  <option value="branding">Brand Identity</option>
+                                  <option value="video">Video Production</option>
+                                  <option value="website">Website Design</option>
+                                  <option value="full-package">Full Package</option>
+                                </select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="budget"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-text-secondary">Monthly Budget Range</FormLabel>
+                              <FormControl>
+                                <select
+                                  className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary transition-colors duration-300"
+                                  {...field}
+                                >
+                                  <option value="">Select budget range</option>
+                                  <option value="50k-1l">₹50,000 – ₹1,00,000</option>
+                                  <option value="1l-2l">₹1,00,000 – ₹2,00,000</option>
+                                  <option value="2l-3l">₹2,00,000 – ₹3,00,000</option>
+                                  <option value="3l+">₹3,00,000+</option>
+                                </select>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
                         />
                       </div>
-                    </div>
 
-                    <div className="grid sm:grid-cols-2 gap-6">
-                      <div>
-                        <Label className="mb-2 block text-text-secondary">
-                          Service Interested In
-                        </Label>
-                        <select
-                          value={formData.service}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              service: e.target.value,
-                            })
-                          }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary transition-colors duration-300"
-                        >
-                          <option value="">Select a service</option>
-                          <option value="social-media">
-                            Social Media Management
-                          </option>
-                          <option value="content">Content Creation</option>
-                          <option value="performance">
-                            Performance Marketing
-                          </option>
-                          <option value="branding">Brand Identity</option>
-                          <option value="video">Video Production</option>
-                          <option value="website">Website Design</option>
-                          <option value="full-package">Full Package</option>
-                        </select>
-                      </div>
-                      <div>
-                        <Label className="mb-2 block text-text-secondary">
-                          Monthly Budget Range
-                        </Label>
-                        <select
-                          value={formData.budget}
-                          onChange={(e) =>
-                            setFormData({ ...formData, budget: e.target.value })
-                          }
-                          className="w-full px-4 py-3 rounded-xl bg-bg-card border border-border focus:border-accent focus:outline-none text-text-primary transition-colors duration-300"
-                        >
-                          <option value="">Select budget range</option>
-                          <option value="50k-1l">₹50,000 – ₹1,00,000</option>
-                          <option value="1l-2l">₹1,00,000 – ₹2,00,000</option>
-                          <option value="2l-3l">₹2,00,000 – ₹3,00,000</option>
-                          <option value="3l+">₹3,00,000+</option>
-                        </select>
-                      </div>
-                    </div>
-
-                    <div>
-                      <Label className="mb-2 block text-text-secondary">
-                        Tell Us About Your Project
-                      </Label>
-                      <Textarea
-                        rows={4}
-                        value={formData.message}
-                        onChange={(e) =>
-                          setFormData({ ...formData, message: e.target.value })
-                        }
-                        className="rounded-xl border-border bg-bg-card"
-                        placeholder="Tell us about your brand, goals, and what you're looking for..."
+                      <FormField
+                        control={form.control}
+                        name="message"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel className="text-text-secondary">Tell Us About Your Project</FormLabel>
+                            <FormControl>
+                              <Textarea
+                                rows={4}
+                                className="rounded-xl border-border bg-bg-card"
+                                placeholder="Tell us about your brand, goals, and what you're looking for..."
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                    </div>
 
-                    <Button
-                      type="submit"
-                      disabled={isLoading}
-                      className="group h-12 rounded-full bg-accent px-8 text-base font-bold text-black hover:bg-accent-hover"
-                    >
-                      {isLoading ? (
-                        <>
-                          <Loader2 size={18} className="animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send size={18} />
-                          Send Message
-                        </>
-                      )}
-                    </Button>
-                  </form>
+                      <Button
+                        type="submit"
+                        disabled={isLoading}
+                        className="group h-12 rounded-full bg-accent px-8 text-base font-bold text-black hover:bg-accent-hover"
+                      >
+                        {isLoading ? (
+                          <>
+                            <Loader2 size={18} className="animate-spin" />
+                            Sending...
+                          </>
+                        ) : (
+                          <>
+                            <Send size={18} />
+                            Send Message
+                          </>
+                        )}
+                      </Button>
+                    </form>
+                  </Form>
                 </div>
 
                 <div className="hidden lg:flex items-center justify-center lg:w-80">

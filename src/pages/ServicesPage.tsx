@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, Suspense, lazy } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   ArrowRight,
@@ -6,15 +6,20 @@ import {
   Circle,
   LayoutGrid,
   Sparkles,
+  Loader2,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import HomeCTAButton from "@/components/ui/HomeCTAButton";
+import { Button } from "@/components/base/button";
+import HomeCTAButton from "@/components/composite/HomeCTAButton";
 import { ROUTES } from "@/routes";
-import LottieAnimation from "@/components/common/LottieAnimation";
+import LottieAnimation from "@/components/composite/LottieAnimation";
 import { LOTTIE_ANIMATIONS } from "@/constants";
 import { useInView } from "@/hooks";
-import cuateImg from "@/assets/cuate.png";
-// import { SEO } from "@/components";
+// import cuateImg from "@/assets/cuate.png";
+
+// Lazy load the heavy 3D component to keep initial bundle size small
+const GrowthVisualization3D = lazy(
+  () => import("@/components/composite/GrowthVisualization3D")
+);
 
 const services: {
   animation?: string;
@@ -307,12 +312,16 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="flex-1 flex justify-center">
-            <img
-              src={cuateImg}
-              alt="Digital marketing services illustration"
-              className="w-full max-w-lg drop-shadow-[0_20px_80px_rgba(0,0,0,0.5)]"
-            />
+          <div className="flex-1 w-full max-w-lg min-h-[400px]">
+             <Suspense
+              fallback={
+                <div className="flex h-[400px] w-full items-center justify-center rounded-2xl border border-border bg-bg-card/50">
+                  <Loader2 className="h-8 w-8 animate-spin text-accent" />
+                </div>
+              }
+            >
+              <GrowthVisualization3D />
+            </Suspense>
           </div>
         </div>
       </section>

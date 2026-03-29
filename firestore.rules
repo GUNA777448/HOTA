@@ -1,0 +1,52 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwnAdminProfile(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == "admin";
+    }
+
+    // Admin profile: each user can manage only their own document.
+    match /admins/{uid} {
+      allow read: if isOwnAdminProfile(uid);
+      allow create: if isOwnAdminProfile(uid) && request.resource.data.uid == uid;
+      allow update: if isOwnAdminProfile(uid) && request.resource.data.uid == uid;
+      allow delete: if false;
+    }
+
+    // Public blog data can be read by anyone.
+    // Only authenticated admins can create/update/delete.
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /blog_authors/{authorId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /blog_categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /blog_tags/{tagId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Default deny.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

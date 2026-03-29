@@ -8,7 +8,8 @@ import {
   Phone,
   X,
 } from "lucide-react";
-import { NavBar as TubeLightNavBar } from "@/components/ui/tube-light-navbar";
+import { NavBar as TubeLightNavBar } from "@/components/shell/tube-light-navbar";
+import logoImage from "@/assets/RENAME.jpeg";
 
 const navLinks = [
   { name: "Home", path: "/", icon: Home },
@@ -30,8 +31,8 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-3">
             <img
-              src="https://res.cloudinary.com/diiyy6bar/image/upload/v1773761925/WhatsApp_Image_2026-03-17_at_9.07.36_PM_nvnnx1.jpg"
-              alt=""
+              src={logoImage}
+              alt="HOTA logo"
               className="h-15 w-50 rounded-full md:h-10"
             />
           </Link>

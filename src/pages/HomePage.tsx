@@ -1,9 +1,8 @@
-import HeroSection from "@/components/ui/HeroSection";
-import AboutSection from "@/components/ui/AboutSection";
-import ServicesSection from "@/components/ui/ServicesSection";
-import PortfolioPreview from "@/components/ui/PortfolioPreview";
-// import PackagesPreview from "@/components/ui/PackagesPreview";
-import CTASection from "@/components/ui/CTASection";
+import HeroSection from "@/components/sections/HeroSection";
+import AboutSection from "@/components/sections/AboutSection";
+import ServicesSection from "@/components/sections/ServicesSection";
+// import PackagesPreview from "@/components/sections/PackagesPreview";
+import CTASection from "@/components/sections/CTASection";
 // import { SEO } from "@/components";
 
 export default function HomePage() {
@@ -13,7 +12,6 @@ export default function HomePage() {
       <HeroSection />
       <AboutSection />
       <ServicesSection />
-      <PortfolioPreview />
       {/* <PackagesPreview /> */}
       <CTASection />
     </>

@@ -10,8 +10,9 @@ import NewsletterCTA from "@/components/blog/NewsletterCTA";
 import ShareBar from "@/components/blog/ShareBar";
 import BlogSEO from "@/components/blog/BlogSEO";
 import BlogWorkWithUsCTA from "@/components/blog/BlogWorkWithUsCTA";
-import { getBlogPostBySlug, getRelatedPosts } from "@/constants/blog.constants";
 import type { BlogHeading } from "@/interfaces/blog.interfaces";
+import type { BlogPost } from "@/interfaces/blog.interfaces";
+import { getBlogPostBySlugFromDb, getRelatedPostsFromDb } from "@/services";
 
 function formatDate(dateStr: string) {
   return new Date(dateStr).toLocaleDateString("en-IN", {
@@ -24,16 +25,47 @@ function formatDate(dateStr: string) {
 export default function BlogArticlePage() {
   const { slug } = useParams<{ slug: string }>();
   const [showNewsletterSlide, setShowNewsletterSlide] = useState(false);
+  const [post, setPost] = useState<BlogPost | null>(null);
+  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const post = useMemo(
-    () => (slug ? getBlogPostBySlug(slug) : undefined),
-    [slug],
-  );
+  useEffect(() => {
+    let isMounted = true;
 
-  const relatedPosts = useMemo(
-    () => (post ? getRelatedPosts(post) : []),
-    [post],
-  );
+    async function loadArticle() {
+      if (!slug) {
+        if (isMounted) {
+          setPost(null);
+          setRelatedPosts([]);
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      setIsLoading(true);
+      const postData = await getBlogPostBySlugFromDb(slug);
+
+      if (!isMounted) return;
+
+      if (!postData) {
+        setPost(null);
+        setRelatedPosts([]);
+        setIsLoading(false);
+        return;
+      }
+
+      setPost(postData);
+      const related = await getRelatedPostsFromDb(postData);
+      if (!isMounted) return;
+      setRelatedPosts(related);
+      setIsLoading(false);
+    }
+
+    loadArticle();
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
 
   const headings: BlogHeading[] = useMemo(() => {
     if (!post) return [];
@@ -64,6 +96,16 @@ export default function BlogArticlePage() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (isLoading) {
+    return (
+      <section className="min-h-screen flex flex-col items-center justify-center">
+        <h1 className="text-3xl font-bold text-text-primary mb-4">
+          Loading article...
+        </h1>
+      </section>
+    );
+  }
 
   if (!post) {
     return (

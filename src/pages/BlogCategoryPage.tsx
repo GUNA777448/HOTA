@@ -1,21 +1,59 @@
 import { useParams, Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogSEO from "@/components/blog/BlogSEO";
 import {
-  getBlogCategoryBySlug,
-  getPostsByCategory,
-} from "@/constants/blog.constants";
+  getBlogCategoriesFromDb,
+  getPostsByCategorySlugFromDb,
+} from "@/services";
+import type { BlogCategory, BlogPost } from "@/interfaces";
 
 export default function BlogCategoryPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [category, setCategory] = useState<BlogCategory | null>(null);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const category = useMemo(
-    () => (slug ? getBlogCategoryBySlug(slug) : undefined),
-    [slug],
-  );
+  useEffect(() => {
+    let isMounted = true;
 
-  const posts = useMemo(() => (slug ? getPostsByCategory(slug) : []), [slug]);
+    async function loadData() {
+      if (!slug) {
+        if (isMounted) {
+          setCategory(null);
+          setPosts([]);
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      setIsLoading(true);
+      const [categories, postsData] = await Promise.all([
+        getBlogCategoriesFromDb(),
+        getPostsByCategorySlugFromDb(slug),
+      ]);
+
+      if (!isMounted) return;
+      setCategory(categories.find((c) => c.slug === slug) || null);
+      setPosts(postsData);
+      setIsLoading(false);
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <section className="min-h-screen flex flex-col items-center justify-center">
+        <h1 className="text-3xl font-bold text-text-primary mb-4">
+          Loading category...
+        </h1>
+      </section>
+    );
+  }
 
   if (!category) {
     return (

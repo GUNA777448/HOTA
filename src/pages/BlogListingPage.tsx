@@ -1,43 +1,71 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogSearch from "@/components/blog/BlogSearch";
 import BlogCategoryFilter from "@/components/blog/BlogCategoryFilter";
 import BlogSEO from "@/components/blog/BlogSEO";
 import NewsletterCTA from "@/components/blog/NewsletterCTA";
-import {
-  BLOG_POSTS,
-  BLOG_CATEGORIES,
-  getPostsByCategory,
-  searchBlogPosts,
-} from "@/constants/blog.constants";
 import { useInView } from "@/hooks/useInView";
+import { getBlogCategoriesFromDb, getPublishedBlogPosts } from "@/services";
+import type { BlogPost, BlogCategory } from "@/interfaces";
 
 export default function BlogListingPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get("category") || null;
   const [searchQuery, setSearchQuery] = useState("");
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const featuredPost = BLOG_POSTS.find((p) => p.featured);
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadData() {
+      try {
+        const [postsData, categoriesData] = await Promise.all([
+          getPublishedBlogPosts(),
+          getBlogCategoriesFromDb(),
+        ]);
+
+        if (!isMounted) return;
+        setPosts(postsData);
+        setCategories(categoriesData);
+      } finally {
+        if (isMounted) setIsLoading(false);
+      }
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const featuredPost = posts.find((p) => p.featured);
 
   const filteredPosts = useMemo(() => {
-    let posts = categoryParam
-      ? getPostsByCategory(categoryParam)
-      : [...BLOG_POSTS];
+    let result = categoryParam
+      ? posts.filter((post) => post.category.slug === categoryParam)
+      : [...posts];
 
     if (searchQuery.trim()) {
-      const searched = searchBlogPosts(searchQuery);
-      const searchIds = new Set(searched.map((p) => p.id));
-      posts = posts.filter((p) => searchIds.has(p.id));
+      const q = searchQuery.toLowerCase();
+      result = result.filter(
+        (post) =>
+          post.title.toLowerCase().includes(q) ||
+          post.excerpt.toLowerCase().includes(q) ||
+          post.tags.some((tag) => tag.name.toLowerCase().includes(q)) ||
+          post.category.name.toLowerCase().includes(q),
+      );
     }
 
     // Don't show featured post in grid if no filters are active
     if (!categoryParam && !searchQuery.trim() && featuredPost) {
-      posts = posts.filter((p) => p.id !== featuredPost.id);
+      result = result.filter((p) => p.id !== featuredPost.id);
     }
 
-    return posts;
-  }, [categoryParam, searchQuery, featuredPost]);
+    return result;
+  }, [categoryParam, searchQuery, featuredPost, posts]);
 
   const handleCategorySelect = (slug: string | null) => {
     if (slug) {
@@ -101,7 +129,7 @@ export default function BlogListingPage() {
             }`}
           >
             <BlogCategoryFilter
-              categories={BLOG_CATEGORIES}
+              categories={categories}
               activeCategory={categoryParam}
               onSelect={handleCategorySelect}
             />
@@ -117,7 +145,11 @@ export default function BlogListingPage() {
                 : "opacity-0 translate-y-8"
             }`}
           >
-            {filteredPosts.length > 0 ? (
+            {isLoading ? (
+              <div className="text-center py-20">
+                <p className="text-text-muted text-lg">Loading articles...</p>
+              </div>
+            ) : filteredPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post) => (
                   <BlogCard key={post.id} post={post} />

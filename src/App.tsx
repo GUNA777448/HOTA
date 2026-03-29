@@ -15,6 +15,10 @@ const BlogListingPage = lazy(() => import("@/pages/BlogListingPage"));
 const BlogArticlePage = lazy(() => import("@/pages/BlogArticlePage"));
 const BlogAuthorPage = lazy(() => import("@/pages/BlogAuthorPage"));
 const BlogCategoryPage = lazy(() => import("@/pages/BlogCategoryPage"));
+const AdminLoginPage = lazy(() => import("@/pages/AdminLoginPage"));
+const AdminBlogsPage = lazy(() => import("@/pages/AdminBlogsPage"));
+const AdminProfilePage = lazy(() => import("@/pages/AdminProfilePage"));
+const NotFoundPage = lazy(() => import("@/pages/NotFoundPage"));
 
 // Loading fallback component
 function PageLoader() {
@@ -44,6 +48,10 @@ function App() {
       />
       <Suspense fallback={<PageLoader />}>
         <Routes>
+          <Route path={ROUTES.ADMIN_LOGIN} element={<AdminLoginPage />} />
+          <Route path={ROUTES.ADMIN_BLOGS} element={<AdminBlogsPage />} />
+          <Route path={ROUTES.ADMIN_PROFILE} element={<AdminProfilePage />} />
+          <Route path="/blogs" element={<AdminBlogsPage />} />
           <Route element={<MainLayout />}>
             <Route path={ROUTES.HOME} element={<HomePage />} />
             <Route path={ROUTES.SERVICES} element={<ServicesPage />} />
@@ -56,6 +64,7 @@ function App() {
             <Route path={ROUTES.CONTACT} element={<ContactPage />} />
             <Route path={ROUTES.FREE_AUDIT} element={<FreeAuditPage />} />
           </Route>
+          <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

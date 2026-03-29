@@ -1,25 +1,60 @@
 import { useParams, Link } from "react-router-dom";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Linkedin, Twitter, Instagram, Globe } from "lucide-react";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogSEO from "@/components/blog/BlogSEO";
 import {
-  getBlogAuthorBySlug,
-  getPostsByAuthor,
-} from "@/constants/blog.constants";
+  getBlogAuthorBySlugFromDb,
+  getPostsByAuthorSlugFromDb,
+} from "@/services";
+import type { BlogAuthor, BlogPost } from "@/interfaces";
 
 export default function BlogAuthorPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [author, setAuthor] = useState<BlogAuthor | null>(null);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const author = useMemo(
-    () => (slug ? getBlogAuthorBySlug(slug) : undefined),
-    [slug],
-  );
+  useEffect(() => {
+    let isMounted = true;
 
-  const posts = useMemo(
-    () => (author ? getPostsByAuthor(author.id) : []),
-    [author],
-  );
+    async function loadData() {
+      if (!slug) {
+        if (isMounted) {
+          setAuthor(null);
+          setPosts([]);
+          setIsLoading(false);
+        }
+        return;
+      }
+
+      setIsLoading(true);
+      const [authorData, authorPosts] = await Promise.all([
+        getBlogAuthorBySlugFromDb(slug),
+        getPostsByAuthorSlugFromDb(slug),
+      ]);
+
+      if (!isMounted) return;
+      setAuthor(authorData);
+      setPosts(authorPosts);
+      setIsLoading(false);
+    }
+
+    loadData();
+    return () => {
+      isMounted = false;
+    };
+  }, [slug]);
+
+  if (isLoading) {
+    return (
+      <section className="min-h-screen flex flex-col items-center justify-center">
+        <h1 className="text-3xl font-bold text-text-primary mb-4">
+          Loading author...
+        </h1>
+      </section>
+    );
+  }
 
   if (!author) {
     return (
